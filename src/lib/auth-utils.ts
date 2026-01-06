@@ -6,7 +6,11 @@ import { prisma } from './prisma'
 
 // Security configurations
 const SALT_ROUNDS = 12
-const JWT_SECRET = process.env.JWT_SECRET || '2fRQzpylv3A01WBkmB+Aj9ql2/RCbU6e4gL5vGRP5GtQQ292XJQY03hIzRGVI3T6uv6Ywg6KCgD///20wqkEhQ=='
+const JWT_SECRET = process.env.JWT_SECRET
+
+if (!JWT_SECRET) {
+  throw new Error('JWT_SECRET environment variable is required')
+}
 const SESSION_DURATION = 7 * 24 * 60 * 60 * 1000 // 7 days in milliseconds
 
 // JWT secret as Uint8Array for jose

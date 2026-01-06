@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { verifyJWT } from './lib/auth-utils'
+import { verifyJWTEdge } from './lib/jwt-edge'
 
 function addSecurityHeaders(response: NextResponse): NextResponse {
   // Content Security Policy
@@ -46,7 +46,7 @@ export async function middleware(request: NextRequest) {
 
     try {
       // Only validate JWT, not session (to avoid Prisma timeout in Edge Runtime)
-      const decoded = await verifyJWT(token)
+      const decoded = await verifyJWTEdge(token)
       if (!decoded) {
         response = NextResponse.redirect(new URL('/auth/login', request.url))
         return addSecurityHeaders(response)

@@ -215,10 +215,10 @@ export function checkRateLimit(
   windowMs: number = 15 * 60 * 1000 // 15 minutes
 ): { allowed: boolean; remainingAttempts: number; resetTime: number } {
   const now = Date.now()
-  
+
   // Cleanup expired entries before checking
   cleanupRateLimitStore()
-  
+
   const record = rateLimitStore.get(key)
 
   if (!record || now > record.resetTime) {
@@ -247,16 +247,6 @@ export function checkRateLimit(
     allowed: true,
     remainingAttempts: maxAttempts - record.count,
     resetTime: record.resetTime
-  }
-}
-
-// Cleanup rate limit store (called manually instead of setInterval for serverless compatibility)
-function cleanupRateLimitStore() {
-  const now = Date.now()
-  for (const [key, record] of rateLimitStore.entries()) {
-    if (now > record.resetTime) {
-      rateLimitStore.delete(key)
-    }
   }
 }
 

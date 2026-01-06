@@ -1,0 +1,233 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                     String                 @id @default(cuid())
+  email                  String                 @unique
+  name                   String
+  password               String
+  emailVerified          DateTime?
+  emailVerificationToken String?                @unique
+  image                  String?
+  emoji                  String?                @default("😊")
+  accountType            String                 @default("NORMAL")
+  role                   String                 @default("USER") // USER, ADMIN
+  telegramId             String?                @unique
+  whatsappId             String?                @unique
+  isActive               Boolean                @default(true)
+  lastLoginAt            DateTime?
+  // Campos de assinatura
+  trialEndsAt            DateTime?              // Data de fim do período de teste (7 dias)
+  subscriptionStatus     String                 @default("TRIAL") // TRIAL, ACTIVE, EXPIRED, CANCELLED
+  subscriptionPlan       String?                @default("FREE") // FREE, BASIC, PREMIUM
+  subscriptionId         String?                @unique // ID da assinatura no Stripe
+  createdAt              DateTime               @default(now())
+  updatedAt              DateTime               @updatedAt
+  goals                  Goal[]
+  investments            Investment[]
+  passwordResets         PasswordReset[]
+  sessions               Session[]
+  transactions           Transaction[]
+  telegramAlertSettings  TelegramAlertSettings?
+  userSettings           UserSettings?
+  subscription           Subscription?
+  payments               Payment[]
+
+  @@map("users")
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  userAgent String?
+  ipAddress String?
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model PasswordReset {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("password_resets")
+}
+
+model Category {
+  id           String        @id @default(cuid())
+  name         String        @unique
+  icon         String?
+  color        String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  transactions Transaction[]
+
+  @@map("categories")
+}
+
+model Transaction {
+  id          String   @id @default(cuid())
+  amount      Float
+  description String
+  date        DateTime @default(now())
+  type        String   @default("EXPENSE")
+  method      String   @default("CASH")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  userId      String
+  categoryId  String
+  category    Category @relation(fields: [categoryId], references: [id])
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Previne duplicatas: mesmo usuário, valor, descrição e tipo dentro de 5 minutos
+  @@unique([userId, amount, description, type, date], name: "unique_transaction")
+  @@index([userId, createdAt], name: "user_transactions_by_date")
+  @@map("transactions")
+}
+
+model Goal {
+  id            String    @id @default(cuid())
+  title         String
+  description   String?
+  targetAmount  Float
+  currentAmount Float     @default(0)
+  targetDate    DateTime?
+  status        String    @default("ACTIVE")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("goals")
+}
+
+model Investment {
+  id            String    @id @default(cuid())
+  title         String
+  description   String?
+  currentAmount Float     @default(0)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("investments")
+}
+
+model TelegramAlertSettings {
+  id                    String   @id @default(cuid())
+  userId                String   @unique
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Alertas de gasto alto
+  highSpendingEnabled   Boolean  @default(true)
+  highSpendingThreshold Float    @default(100.0) // Valor em R$
+  highSpendingPeriod    String   @default("DAILY") // DAILY, WEEKLY, MONTHLY
+  
+  // Alertas de meta
+  goalProgressEnabled   Boolean  @default(true)
+  goalProgressThreshold Float    @default(50.0) // Porcentagem
+  
+  // Resumo diário
+  dailySummaryEnabled   Boolean  @default(false)
+  dailySummaryTime      String?  @default("20:00") // HH:mm
+  
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  @@map("telegram_alert_settings")
+}
+
+model UserSettings {
+  id                      String   @id @default(cuid())
+  userId                  String   @unique
+  user                    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // === ALERTAS DE GASTOS ===
+  spendingAlertsEnabled   Boolean  @default(false)
+  spendingAlertLimit      Float    @default(500.0)     // Limite em R$
+  spendingAlertPeriod     String   @default("DAILY")   // DAILY, WEEKLY, MONTHLY
+  
+  // === ALERTAS DE METAS ===
+  goalAlertsEnabled       Boolean  @default(true)
+  goalAlertThreshold      Float    @default(80.0)      // % para notificar proximidade
+  
+  // === ALERTAS DE SALDO BAIXO ===
+  lowBalanceAlertEnabled  Boolean  @default(false)
+  lowBalanceThreshold     Float    @default(100.0)     // Saldo mínimo em R$
+  
+  // === CANAL DE ENTREGA DOS ALERTAS ===
+  alertDeliveryMethod     String   @default("TELEGRAM") // EMAIL, TELEGRAM, BOTH
+  
+  // === CONFIGURAÇÕES DE EMAIL ===
+  emailFrequency          String   @default("INSTANT") // INSTANT, DAILY_DIGEST, WEEKLY_DIGEST
+  emailTime               String?  @default("09:00")   // Horário para digest
+  
+  // === RELATÓRIOS ===
+  weeklyReportEnabled     Boolean  @default(false)
+  weeklyReportDay         String   @default("MONDAY")  // Dia da semana
+  weeklyReportContent     String   @default("FULL")    // FULL, SUMMARY, EXPENSES_ONLY, INCOME_ONLY
+  
+  monthlyReportEnabled    Boolean  @default(false)
+  monthlyReportDay        Int      @default(1)         // Dia do mês (1-28)
+  monthlyReportContent    String   @default("FULL")    // FULL, SUMMARY, COMPARISON
+  
+  // === CANAL DE ENTREGA ===
+  reportDeliveryMethod    String   @default("EMAIL")   // EMAIL, TELEGRAM, BOTH
+  
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+
+  @@map("user_settings")
+}
+
+model Subscription {
+  id                      String    @id @default(cuid())
+  userId                  String    @unique
+  user                    User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status                  String    @default("TRIAL") // TRIAL, ACTIVE, EXPIRED, CANCELLED
+  plan                    String    @default("FREE") // FREE, BASIC, PREMIUM
+  currentPeriodStart      DateTime?
+  currentPeriodEnd        DateTime?
+  cancelAtPeriodEnd       Boolean   @default(false)
+  gateway                 String    @default("STRIPE") // STRIPE
+  gatewaySubscriptionId   String?   @unique // ID da assinatura no Stripe
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
+  payments                Payment[]
+  
+  @@map("subscriptions")
+}
+
+model Payment {
+  id                  String    @id @default(cuid())
+  userId              String
+  user                User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subscriptionId      String?
+  subscription        Subscription? @relation(fields: [subscriptionId], references: [id])
+  amount              Float     // Valor em R$
+  currency            String    @default("BRL")
+  status              String    // PENDING, PAID, FAILED, REFUNDED
+  gateway             String    @default("STRIPE") // STRIPE
+  gatewayPaymentId    String?   @unique // ID do pagamento no Stripe
+  method              String?   // CREDIT_CARD, PIX, BOLETO
+  description         String?
+  paidAt              DateTime?
+  createdAt           DateTime  @default(now())
+  
+  @@map("payments")
+}

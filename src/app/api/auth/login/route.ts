@@ -57,13 +57,15 @@ export async function POST(request: NextRequest) {
     // Create token
     const token = await createToken({ userId: user.id })
 
+    // Create response with redirect
     const response = NextResponse.json({
       message: 'Login realizado com sucesso',
       user: {
         id: user.id,
         email: user.email,
         name: user.name
-      }
+      },
+      redirect: '/dashboard'
     })
 
     // Set cookie

@@ -33,8 +33,11 @@ export default function LoginPage() {
 
       if (response.ok) {
         console.log('Login successful, redirecting to dashboard')
-        // Use location.assign instead of href for better redirect
-        window.location.assign('/dashboard')
+        // Give the cookie a moment to be set, then redirect
+        setTimeout(() => {
+          const redirectPath = data.redirect || '/dashboard'
+          window.location.assign(redirectPath)
+        }, 100)
       } else {
         const errorMessage = data.message || 'Erro ao fazer login'
         setError(errorMessage)

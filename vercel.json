@@ -12,6 +12,5 @@
     }
   ],
   "buildCommand": "prisma generate && next build",
-  "installCommand": "npm install",
-  "//": "Auditoria completa - Projeto limpo e otimizado"
+  "installCommand": "npm install"
 }

@@ -8,6 +8,45 @@ import {
   parseExpenseMessage
 } from '@/lib/telegram-parser'
 
+// Evolution API message interfaces
+interface EvolutionMessage {
+  key: {
+    remoteJid: string // Número com @s.whatsapp.net
+    fromMe: boolean
+    id: string
+  }
+  message?: {
+    conversation?: string
+    extendedTextMessage?: {
+      text: string
+    }
+  }
+  messageTimestamp: number
+  pushName?: string
+  status?: string
+}
+
+interface EvolutionWebhook {
+  event: string // 'messages.upsert', 'connection.update', etc
+  instance: string
+  data: {
+    key: {
+      remoteJid: string
+      fromMe: boolean
+      id: string
+    }
+    message?: {
+      conversation?: string
+      extendedTextMessage?: {
+        text: string
+      }
+    }
+    messageTimestamp: number
+    pushName?: string
+  }
+}
+
+// Legacy interface para compatibilidade com EditaCódigo
 interface WhatsAppMessage {
   from: string // Número do remetente
   body: string // Texto da mensagem
@@ -36,30 +75,55 @@ export async function GET(request: NextRequest) {
 }
 
 /**
- * POST - Receber mensagens do WhatsApp
+ * POST - Receber mensagens do WhatsApp (Evolution API e EditaCódigo)
  */
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     console.log('📩 Webhook WhatsApp recebido:', JSON.stringify(body, null, 2))
 
-    // Estrutura pode variar conforme a API da EditaCódigo
-    // Ajustar conforme a documentação real
-    const message: WhatsAppMessage = {
-      from: body.from || body.number || body.phone || '',
-      body: body.body || body.text || body.message || '',
-      timestamp: body.timestamp || Date.now()
+    let phoneNumber: string = ''
+    let text: string = ''
+    let timestamp: number = Date.now()
+
+    // Detectar formato da mensagem (Evolution API vs EditaCódigo)
+    if (isEvolutionAPIWebhook(body)) {
+      // Evolution API format
+      const evolutionData = body as EvolutionWebhook
+
+      // Ignorar mensagens enviadas por nós
+      if (evolutionData.data.key.fromMe) {
+        return NextResponse.json({ ok: true })
+      }
+
+      // Extrair dados da Evolution API
+      const remoteJid = evolutionData.data.key.remoteJid
+      phoneNumber = remoteJid.replace('@s.whatsapp.net', '').replace(/\D/g, '')
+
+      // Extrair texto da mensagem
+      text = evolutionData.data.message?.conversation ||
+             evolutionData.data.message?.extendedTextMessage?.text || ''
+
+      timestamp = evolutionData.data.messageTimestamp * 1000 // Evolution usa segundos, convertemos para ms
+
+      console.log(`📱 Evolution API - Usuário ${phoneNumber} disse: "${text}"`)
+
+    } else {
+      // EditaCódigo format (legacy)
+      phoneNumber = (body.from || body.number || body.phone || '').replace(/\D/g, '')
+      text = body.body || body.text || body.message || ''
+      timestamp = body.timestamp || Date.now()
+
+      console.log(`📱 EditaCódigo - Usuário ${phoneNumber} disse: "${text}"`)
     }
 
-    if (!message.from || !message.body) {
-      console.log('⚠️ Mensagem inválida - campos ausentes')
+    // Validar dados extraídos
+    if (!phoneNumber || !text.trim()) {
+      console.log('⚠️ Mensagem inválida - campos ausentes:', { phoneNumber, text })
       return NextResponse.json({ ok: true })
     }
 
-    const phoneNumber = message.from.replace(/\D/g, '') // Remove caracteres não numéricos
-    const text = message.body.trim()
-
-    console.log(`👤 Usuário ${phoneNumber} disse: "${text}"`)
+    text = text.trim()
 
     // Buscar usuário pelo WhatsApp ID
     const user = await prisma.user.findUnique({
@@ -68,7 +132,7 @@ export async function POST(request: NextRequest) {
 
     if (!user) {
       // Usuário não vinculado - enviar mensagem de boas-vindas e instruções
-      const welcomeMessage = 
+      const welcomeMessage =
         `🎉 *Bem-vindo ao Orbi - Seu Orçamento Inteligente!*\n\n` +
         `Para começar, você precisa vincular sua conta WhatsApp ao seu perfil no site.\n\n` +
         `Acesse: https://useorbi.app/dashboard/whatsapp-bot\n\n` +
@@ -90,6 +154,13 @@ export async function POST(request: NextRequest) {
     console.error('❌ Erro no webhook WhatsApp:', error)
     return NextResponse.json({ ok: true }) // Sempre retornar ok para não bloquear webhook
   }
+}
+
+/**
+ * Detecta se o webhook é da Evolution API
+ */
+function isEvolutionAPIWebhook(body: any): boolean {
+  return body.event && body.instance && body.data && body.data.key && body.data.key.remoteJid
 }
 
 /**

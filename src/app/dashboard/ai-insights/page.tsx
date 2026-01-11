@@ -20,6 +20,7 @@ import {
   Share,
   Star
 } from 'lucide-react'
+import SimpleBackground from '@/components/ui/simple-background'
 
 export default function AIInsightsPage() {
   const [selectedCategory, setSelectedCategory] = useState('all')
@@ -46,7 +47,7 @@ export default function AIInsightsPage() {
       case 'high': return 'text-red-400 bg-red-500/20'
       case 'medium': return 'text-yellow-400 bg-yellow-500/20'
       case 'low': return 'text-green-400 bg-green-500/20'
-      default: return 'text-zinc-400 bg-zinc-500/20'
+      default: return 'text-zinc-300 font-medium bg-zinc-500/20'
     }
   }
 
@@ -84,7 +85,11 @@ export default function AIInsightsPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <>
+      <div className="fixed inset-0" style={{ zIndex: -1 }}>
+        <SimpleBackground />
+      </div>
+      <div className="min-h-screen relative space-y-6 p-6">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -97,7 +102,7 @@ export default function AIInsightsPage() {
             <Brain className="w-8 h-8 text-purple-400" />
             AI Insights
           </h1>
-          <p className="text-zinc-400">Análises inteligentes sobre seus hábitos financeiros</p>
+          <p className="text-zinc-300 font-medium">Análises inteligentes sobre seus hábitos financeiros</p>
         </div>
 
         <div className="flex gap-3">
@@ -124,27 +129,27 @@ export default function AIInsightsPage() {
         className="grid grid-cols-1 md:grid-cols-3 gap-6"
       >
         {predictions.map((prediction, index) => (
-          <div key={index} className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
+          <div key={index} className="bg-black/20 backdrop-blur-md border border-white/10 shadow-2xl rounded-2xl p-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-white font-medium">{prediction.title}</h3>
+              <h3 className="text-white font-bold drop-shadow-lg">{prediction.title}</h3>
               <div className="flex items-center gap-2">
                 <Zap className="w-4 h-4 text-yellow-400" />
-                <span className="text-xs text-zinc-400">{prediction.confidence}% confiança</span>
+                <span className="text-xs text-zinc-300 font-medium">{prediction.confidence}% confiança</span>
               </div>
             </div>
 
             <div className="space-y-3">
               <div className="flex justify-between items-center">
-                <span className="text-zinc-400 text-sm">Atual</span>
-                <span className="text-white font-semibold">
+                <span className="text-zinc-300 font-medium text-sm">Atual</span>
+                <span className="text-white font-bold drop-shadow-lg">
                   {prediction.unit === '%' ? `${prediction.current.toFixed(1)}%` : `R$ ${prediction.current.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
                 </span>
               </div>
 
               <div className="flex justify-between items-center">
-                <span className="text-zinc-400 text-sm">Previsão</span>
+                <span className="text-zinc-300 font-medium text-sm">Previsão</span>
                 <div className="flex items-center gap-2">
-                  <span className="text-white font-semibold">
+                  <span className="text-white font-bold drop-shadow-lg">
                     {prediction.unit === '%' ? `${prediction.predicted.toFixed(1)}%` : `R$ ${prediction.predicted.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
                   </span>
                   {prediction.trend === 'positive' ? (
@@ -171,7 +176,7 @@ export default function AIInsightsPage() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6, delay: 0.2 }}
-        className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-sm border border-white/10 rounded-2xl p-6"
+        className="bg-black/20 backdrop-blur-md border border-white/10 shadow-2xl rounded-2xl p-6"
       >
         <div className="flex flex-wrap gap-3">
           {['all', 'comportamento', 'otimização', 'metas', 'receita', 'risco'].map((category) => (
@@ -181,7 +186,7 @@ export default function AIInsightsPage() {
               className={`px-4 py-2 rounded-xl transition-colors ${
                 selectedCategory === category
                   ? 'bg-purple-500/20 text-purple-400 border border-purple-500/30'
-                  : 'bg-white/10 text-zinc-400 hover:text-white hover:bg-white/20'
+                  : 'bg-white/10 text-zinc-300 font-medium hover:text-white hover:bg-white/20'
               }`}
             >
               {category === 'all' ? 'Todos' : category.charAt(0).toUpperCase() + category.slice(1)}
@@ -207,7 +212,7 @@ export default function AIInsightsPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
-              className={`bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:border-white/20 transition-all duration-300 cursor-pointer ${
+              className={`bg-black/20 backdrop-blur-md border border-white/10 shadow-2xl rounded-2xl p-6 hover:border-white/20 transition-all duration-300 cursor-pointer ${
                 isSelected ? 'ring-2 ring-purple-500/50' : ''
               }`}
               onClick={() => setSelectedInsight(isSelected ? null : insight.id)}
@@ -220,25 +225,25 @@ export default function AIInsightsPage() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between mb-3">
                     <div>
-                      <h3 className="text-white font-semibold text-lg mb-1">{insight.title}</h3>
+                      <h3 className="text-white font-bold drop-shadow-lg text-lg mb-1">{insight.title}</h3>
                       <div className="flex items-center gap-3 mb-2">
                         <span className={`px-2 py-1 rounded-full text-xs font-medium ${getImpactColor(insight.impact)}`}>
                           {insight.impact === 'high' ? 'Alto Impacto' :
                            insight.impact === 'medium' ? 'Médio Impacto' : 'Baixo Impacto'}
                         </span>
-                        <span className="text-xs text-zinc-400 flex items-center gap-1">
+                        <span className="text-xs text-zinc-300 font-medium flex items-center gap-1">
                           <Brain className="w-3 h-3" />
                           {insight.confidence}% de confiança
                         </span>
-                        <span className="text-xs text-zinc-400">{insight.category}</span>
+                        <span className="text-xs text-zinc-300 font-medium">{insight.category}</span>
                       </div>
                     </div>
 
                     <div className="flex items-center gap-2">
-                      <button className="p-2 hover:bg-white/10 rounded-lg transition-colors text-zinc-400 hover:text-yellow-400">
+                      <button className="p-2 hover:bg-white/10 rounded-lg transition-colors text-zinc-300 font-medium hover:text-yellow-400">
                         <Star className="w-4 h-4" />
                       </button>
-                      <button className="p-2 hover:bg-white/10 rounded-lg transition-colors text-zinc-400 hover:text-blue-400">
+                      <button className="p-2 hover:bg-white/10 rounded-lg transition-colors text-zinc-300 font-medium hover:text-blue-400">
                         <Share className="w-4 h-4" />
                       </button>
                       <span className="text-xs text-zinc-500">
@@ -260,7 +265,7 @@ export default function AIInsightsPage() {
                       <div className="flex items-start gap-3">
                         <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
                         <div>
-                          <h4 className="text-white font-medium mb-1">Sugestão da IA</h4>
+                          <h4 className="text-white font-bold drop-shadow-lg mb-1">Sugestão da IA</h4>
                           <p className="text-zinc-300 text-sm">{insight.suggestion}</p>
                         </div>
                       </div>
@@ -269,7 +274,7 @@ export default function AIInsightsPage() {
                         <button className="px-4 py-2 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded-lg transition-colors text-sm">
                           Aplicar Sugestão
                         </button>
-                        <button className="px-4 py-2 bg-zinc-600/20 hover:bg-zinc-600/30 text-zinc-400 rounded-lg transition-colors text-sm">
+                        <button className="px-4 py-2 bg-zinc-600/20 hover:bg-zinc-600/30 text-zinc-300 font-medium rounded-lg transition-colors text-sm">
                           Ignorar
                         </button>
                       </div>
@@ -284,11 +289,12 @@ export default function AIInsightsPage() {
 
       {filteredInsights.length === 0 && (
         <div className="text-center py-12">
-          <Brain className="w-12 h-12 text-zinc-400 mx-auto mb-4" />
-          <p className="text-zinc-400 text-lg">Nenhum insight encontrado</p>
+          <Brain className="w-12 h-12 text-zinc-300 font-medium mx-auto mb-4" />
+          <p className="text-zinc-300 font-medium text-lg">Nenhum insight encontrado</p>
           <p className="text-zinc-500 text-sm">A IA está analisando seus dados para gerar novos insights.</p>
         </div>
       )}
-    </div>
+      </div>
+    </>
   )
 }

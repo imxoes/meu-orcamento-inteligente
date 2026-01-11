@@ -18,6 +18,7 @@ import {
   RefreshCw
 } from 'lucide-react'
 import { useValuesVisibility, formatCurrency } from '@/contexts/ValuesVisibilityContext'
+import SimpleBackground from '@/components/ui/simple-background'
 
 type Transaction = {
   id: string
@@ -355,7 +356,11 @@ export default function TransactionsPage() {
   const balance = totalIncome - totalExpenses
 
   return (
-    <div className="space-y-6">
+    <>
+      <div className="fixed inset-0" style={{ zIndex: -1 }}>
+        <SimpleBackground />
+      </div>
+      <div className="min-h-screen relative space-y-6 p-6">
       {/* Header with Stats */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -363,31 +368,31 @@ export default function TransactionsPage() {
         transition={{ duration: 0.6 }}
       >
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-purple-500/20 rounded-xl p-6 backdrop-blur-sm">
+          <div className="bg-black/25 backdrop-blur-md border border-blue-400/20 rounded-xl p-6 shadow-2xl ring-1 ring-blue-400/10 hover:ring-blue-400/20 transition-all duration-300">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-blue-400 text-sm font-medium">Receitas</p>
-                <p className="text-white text-2xl font-bold mt-1">{formatCurrency(totalIncome, showValues)}</p>
+                <p className="text-blue-400 text-sm font-bold drop-shadow-lg">Receitas</p>
+                <p className="text-white text-2xl font-bold drop-shadow-lg mt-1">{formatCurrency(totalIncome, showValues)}</p>
               </div>
               <TrendingUp className="w-8 h-8 text-blue-400" />
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-purple-500/20 rounded-xl p-6 backdrop-blur-sm">
+          <div className="bg-black/25 backdrop-blur-md border border-blue-400/20 rounded-xl p-6 shadow-2xl ring-1 ring-blue-400/10 hover:ring-blue-400/20 transition-all duration-300">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-purple-400 text-sm font-medium">Gastos</p>
-                <p className="text-white text-2xl font-bold mt-1">{formatCurrency(totalExpenses, showValues)}</p>
+                <p className="text-purple-400 text-sm font-bold drop-shadow-lg">Gastos</p>
+                <p className="text-white text-2xl font-bold drop-shadow-lg mt-1">{formatCurrency(totalExpenses, showValues)}</p>
               </div>
               <TrendingDown className="w-8 h-8 text-purple-400" />
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-purple-500/20 rounded-xl p-6 backdrop-blur-sm">
+          <div className="bg-black/25 backdrop-blur-md border border-blue-400/20 rounded-xl p-6 shadow-2xl ring-1 ring-blue-400/10 hover:ring-blue-400/20 transition-all duration-300">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-blue-400 text-sm font-medium">Saldo</p>
-                <p className={`text-2xl font-bold mt-1 ${balance >= 0 ? 'text-white' : 'text-red-400'}`}>
+                <p className="text-blue-400 text-sm font-bold drop-shadow-lg">Saldo</p>
+                <p className={`text-2xl font-bold drop-shadow-lg mt-1 ${balance >= 0 ? 'text-white' : 'text-red-400'}`}>
                   {formatCurrency(balance, showValues)}
                 </p>
               </div>
@@ -397,7 +402,7 @@ export default function TransactionsPage() {
         </div>
 
         {/* Controls */}
-        <div className="bg-gradient-to-br from-blue-500/5 to-purple-500/5 backdrop-blur-sm border border-purple-500/20 rounded-xl p-6">
+        <div className="bg-black/20 backdrop-blur-md border border-white/10 rounded-xl p-6 shadow-2xl">
           <div className="flex flex-col lg:flex-row gap-4 justify-between">
             <div className="flex flex-col sm:flex-row gap-4 flex-1">
               {/* Search */}
@@ -471,18 +476,18 @@ export default function TransactionsPage() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6, delay: 0.2 }}
-        className="bg-gradient-to-br from-blue-500/5 to-purple-500/5 backdrop-blur-sm border border-purple-500/20 rounded-xl overflow-hidden"
+        className="bg-black/20 backdrop-blur-md border border-white/10 rounded-xl overflow-hidden shadow-2xl"
       >
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-white/5">
+            <thead className="bg-black/10 backdrop-blur-sm">
               <tr>
-                <th className="text-left p-4 text-zinc-400 font-medium">Descrição</th>
-                <th className="text-left p-4 text-zinc-400 font-medium">Categoria</th>
-                <th className="text-left p-4 text-zinc-400 font-medium">Data</th>
-                <th className="text-left p-4 text-zinc-400 font-medium">Valor</th>
-                <th className="text-left p-4 text-zinc-400 font-medium">Status</th>
-                <th className="text-left p-4 text-zinc-400 font-medium">Ações</th>
+                <th className="text-left p-4 text-zinc-300 font-bold">Descrição</th>
+                <th className="text-left p-4 text-zinc-300 font-bold">Categoria</th>
+                <th className="text-left p-4 text-zinc-300 font-bold">Data</th>
+                <th className="text-left p-4 text-zinc-300 font-bold">Valor</th>
+                <th className="text-left p-4 text-zinc-300 font-bold">Status</th>
+                <th className="text-left p-4 text-zinc-300 font-bold">Ações</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/10">
@@ -815,6 +820,7 @@ export default function TransactionsPage() {
           </div>
         </div>
       )}
-    </div>
+      </div>
+    </>
   )
 }

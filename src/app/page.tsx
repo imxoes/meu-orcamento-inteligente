@@ -81,7 +81,7 @@ export default function Home() {
   ]
 
   return (
-    <div className="min-h-screen text-white relative" style={{ backgroundColor: '#000000' }}>
+    <div className="min-h-screen text-white relative">
       <AnimatedShaderBackground />
       {/* Hero Section */}
       <section className="relative overflow-hidden" style={{ zIndex: 1 }}>
@@ -288,9 +288,6 @@ export default function Home() {
               </Link>
             </div>
 
-            <p className="text-sm text-zinc-500">
-              Grátis para sempre. Sem cartão de crédito necessário.
-            </p>
           </motion.div>
         </div>
       </section>

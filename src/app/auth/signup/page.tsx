@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Eye, EyeOff, Mail, User, Lock, CheckCircle, XCircle } from 'lucide-react'
-import AnimatedShaderBackground from '@/components/ui/animated-shader-background'
+import SimpleBackground from '@/components/ui/simple-background'
 
 export default function SignupPage() {
   const [formData, setFormData] = useState({
@@ -116,7 +116,7 @@ export default function SignupPage() {
 
   return (
     <div className="min-h-screen text-white flex items-center justify-center px-4 relative" style={{ backgroundColor: '#000000' }}>
-      <AnimatedShaderBackground />
+      <SimpleBackground />
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}

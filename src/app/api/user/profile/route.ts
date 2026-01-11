@@ -34,11 +34,7 @@ export async function GET(request: NextRequest) {
       createdAt: user.createdAt
     }
 
-    if (!user) {
-      return NextResponse.json({ message: 'User not found' }, { status: 404 })
-    }
-
-    return NextResponse.json({ user })
+    return NextResponse.json({ user: userData })
   } catch (error) {
     console.error('Get profile error:', error)
     return NextResponse.json({ message: 'Internal server error' }, { status: 500 })
@@ -99,7 +95,7 @@ export async function PUT(request: NextRequest) {
 
     return NextResponse.json({
       message: 'Perfil atualizado com sucesso',
-      user: updatedUserData
+      user: updatedUser
     })
   } catch (error) {
     console.error('Update profile error:', error)

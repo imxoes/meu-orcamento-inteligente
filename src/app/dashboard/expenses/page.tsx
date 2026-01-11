@@ -18,6 +18,7 @@ import {
   CreditCard
 } from 'lucide-react'
 import { useValuesVisibility, formatCurrency } from '@/contexts/ValuesVisibilityContext'
+import SimpleBackground from '@/components/ui/simple-background'
 
 const categoryIcons: Record<string, any> = {
   'Alimentação': Utensils,
@@ -214,7 +215,7 @@ export default function ExpensesPage() {
   if (expenses.length === 0) {
     return (
       <div className="space-y-6">
-        <div className="bg-gradient-to-br from-blue-500/5 to-purple-500/5 backdrop-blur-sm border border-purple-500/20 rounded-xl p-12 text-center">
+        <div className="bg-black/20 backdrop-blur-md border border-white/10 shadow-2xl rounded-xl p-12 text-center">
           <TrendingDown className="w-16 h-16 text-zinc-400 mx-auto mb-4" />
           <h3 className="text-xl font-bold text-white mb-2">Nenhum gasto registrado</h3>
           <p className="text-zinc-400 mb-6">
@@ -226,7 +227,11 @@ export default function ExpensesPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <>
+      <div className="fixed inset-0" style={{ zIndex: -1 }}>
+        <SimpleBackground />
+      </div>
+      <div className="min-h-screen relative space-y-6 p-6">
       {/* Header with Stats */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -234,11 +239,11 @@ export default function ExpensesPage() {
         transition={{ duration: 0.6 }}
       >
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-purple-500/20 rounded-xl p-6 backdrop-blur-sm">
+          <div className="bg-black/25 backdrop-blur-md border border-blue-400/20 shadow-2xl ring-1 ring-blue-400/10 rounded-xl p-6 backdrop-blur-sm">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-blue-400 text-sm font-medium">Gastos do Mês</p>
-                <p className="text-white text-2xl font-bold mt-1">{formatCurrency(currentMonthExpenses, showValues)}</p>
+                <p className="text-zinc-300 font-medium text-sm">Gastos do Mês</p>
+                <p className="text-white text-2xl font-bold drop-shadow-lg mt-1">{formatCurrency(currentMonthExpenses, showValues)}</p>
                 <div className="flex items-center mt-2">
                   <TrendingDown className={`w-4 h-4 ${monthlyChange > 0 ? 'text-purple-400' : 'text-blue-400'}`} />
                   <span className={`text-sm font-medium ml-1 ${monthlyChange > 0 ? 'text-purple-400' : 'text-blue-400'}`}>
@@ -250,11 +255,11 @@ export default function ExpensesPage() {
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-purple-500/20 rounded-xl p-6 backdrop-blur-sm">
+          <div className="bg-black/25 backdrop-blur-md border border-blue-400/20 shadow-2xl ring-1 ring-blue-400/10 rounded-xl p-6 backdrop-blur-sm">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-purple-400 text-sm font-medium">Média Mensal</p>
-                <p className="text-white text-2xl font-bold mt-1">
+                <p className="text-zinc-300 font-medium text-sm">Média Mensal</p>
+                <p className="text-white text-2xl font-bold drop-shadow-lg mt-1">
                   {formatCurrency(monthlyExpensesData.reduce((sum, m) => sum + m.value, 0) / Math.max(monthlyExpensesData.length, 1), showValues)}
                 </p>
               </div>
@@ -262,11 +267,11 @@ export default function ExpensesPage() {
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-purple-500/20 rounded-xl p-6 backdrop-blur-sm">
+          <div className="bg-black/25 backdrop-blur-md border border-blue-400/20 shadow-2xl ring-1 ring-blue-400/10 rounded-xl p-6 backdrop-blur-sm">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-blue-400 text-sm font-medium">Total do Ano</p>
-                <p className="text-white text-2xl font-bold mt-1">
+                <p className="text-zinc-300 font-medium text-sm">Total do Ano</p>
+                <p className="text-white text-2xl font-bold drop-shadow-lg mt-1">
                   {formatCurrency(monthlyExpensesData.reduce((sum, m) => sum + m.value, 0), showValues)}
                 </p>
               </div>
@@ -276,7 +281,7 @@ export default function ExpensesPage() {
         </div>
 
         {/* Controls */}
-        <div className="bg-gradient-to-br from-blue-500/5 to-purple-500/5 backdrop-blur-sm border border-purple-500/20 rounded-xl p-6">
+        <div className="bg-black/20 backdrop-blur-md border border-white/10 shadow-2xl rounded-xl p-6">
           <div className="flex flex-col lg:flex-row gap-4 justify-between">
             <div className="flex flex-col sm:flex-row gap-4">
               {/* Period Filter */}
@@ -329,9 +334,9 @@ export default function ExpensesPage() {
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="bg-gradient-to-br from-blue-500/5 to-purple-500/5 backdrop-blur-sm border border-purple-500/20 rounded-xl p-6"
+          className="bg-black/20 backdrop-blur-md border border-white/10 shadow-2xl rounded-xl p-6"
         >
-          <h3 className="text-xl font-bold text-white mb-6">
+          <h3 className="text-xl font-bold drop-shadow-lg text-white mb-6">
             Gastos Mensais
           </h3>
           <div className="h-80">
@@ -374,9 +379,9 @@ export default function ExpensesPage() {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="bg-gradient-to-br from-blue-500/5 to-purple-500/5 backdrop-blur-sm border border-purple-500/20 rounded-xl p-6"
+            className="bg-black/20 backdrop-blur-md border border-white/10 shadow-2xl rounded-xl p-6"
           >
-            <h3 className="text-xl font-bold text-white mb-6">Distribuição por Categoria</h3>
+            <h3 className="text-xl font-bold drop-shadow-lg text-white mb-6">Distribuição por Categoria</h3>
             <div className="h-80">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -416,9 +421,9 @@ export default function ExpensesPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="bg-gradient-to-br from-blue-500/5 to-purple-500/5 backdrop-blur-sm border border-purple-500/20 rounded-xl p-6"
+          className="bg-black/20 backdrop-blur-md border border-white/10 shadow-2xl rounded-xl p-6"
         >
-          <h3 className="text-xl font-bold text-white mb-6">Detalhes por Categoria</h3>
+          <h3 className="text-xl font-bold drop-shadow-lg text-white mb-6">Detalhes por Categoria</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {filteredCategories.map((category) => {
               const Icon = category.icon
@@ -437,14 +442,14 @@ export default function ExpensesPage() {
                       <Icon className="w-5 h-5" />
                     </div>
                     <div>
-                      <h4 className="text-white font-medium">{category.name}</h4>
-                      <p className="text-zinc-400 text-sm">{showValues ? `${percentage.toFixed(1)}% do total` : '••••% do total'}</p>
+                      <h4 className="text-white font-bold drop-shadow-lg">{category.name}</h4>
+                      <p className="text-zinc-300 font-medium text-sm">{showValues ? `${percentage.toFixed(1)}% do total` : '••••% do total'}</p>
                     </div>
                   </div>
 
                   <div className="space-y-2">
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-zinc-400">Valor</span>
+                      <span className="text-sm text-zinc-300 font-medium">Valor</span>
                       <span className="text-white font-semibold">{formatCurrency(category.value, showValues)}</span>
                     </div>
 
@@ -464,6 +469,7 @@ export default function ExpensesPage() {
           </div>
         </motion.div>
       )}
-    </div>
+      </div>
+    </>
   )
 }

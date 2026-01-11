@@ -12,13 +12,12 @@ const AnimatedShaderBackground = () => {
     const container = containerRef.current;
     const scene = new THREE.Scene();
     const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-    const renderer = new THREE.WebGLRenderer({ 
-      antialias: false, // Desabilitar antialiasing para melhor performance
+    const renderer = new THREE.WebGLRenderer({
+      antialias: true,
       alpha: true,
-      powerPreference: 'high-performance' // Priorizar performance
+      powerPreference: 'high-performance'
     });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Limitar pixel ratio
     container.appendChild(renderer.domElement);
 
     const material = new THREE.ShaderMaterial({
@@ -35,7 +34,7 @@ const AnimatedShaderBackground = () => {
         uniform float iTime;
         uniform vec2 iResolution;
 
-        #define NUM_OCTAVES 2
+        #define NUM_OCTAVES 3
 
         float rand(vec2 n) {
           return fract(sin(dot(n, vec2(12.9898, 4.1414))) * 43758.5453);
@@ -73,23 +72,22 @@ const AnimatedShaderBackground = () => {
 
           float f = 2.0 + fbm(p + vec2(iTime * 5.0, 0.0)) * 0.5;
 
-          // Reduzido de 35 para 20 iterações para melhor performance
-          for (float i = 0.0; i < 20.0; i++) {
+          for (float i = 0.0; i < 35.0; i++) {
             v = p + cos(i * i + (iTime + p.x * 0.08) * 0.025 + i * vec2(13.0, 11.0)) * 3.5 + vec2(sin(iTime * 3.0 + i) * 0.003, cos(iTime * 3.5 - i) * 0.003);
-            float tailNoise = fbm(v + vec2(iTime * 0.5, i)) * 0.3 * (1.0 - (i / 20.0));
+            float tailNoise = fbm(v + vec2(iTime * 0.5, i)) * 0.3 * (1.0 - (i / 35.0));
             vec4 auroraColors = vec4(
-              0.1 + 0.3 * sin(i * 0.2 + iTime * 0.4),
-              0.3 + 0.5 * cos(i * 0.3 + iTime * 0.5),
-              0.7 + 0.3 * sin(i * 0.4 + iTime * 0.3),
+              0.05 + 0.2 * sin(i * 0.2 + iTime * 0.4),
+              0.15 + 0.3 * cos(i * 0.3 + iTime * 0.5),
+              0.4 + 0.3 * sin(i * 0.4 + iTime * 0.3),
               1.0
             );
             vec4 currentContribution = auroraColors * exp(sin(i * i + iTime * 0.8)) / length(max(v, vec2(v.x * f * 0.015, v.y * 1.5)));
-            float thinnessFactor = smoothstep(0.0, 1.0, i / 20.0) * 0.6;
-            o += currentContribution * (1.0 + tailNoise * 0.8) * thinnessFactor;
+            float thinnessFactor = smoothstep(0.0, 1.0, i / 35.0) * 0.4;
+            o += currentContribution * (1.0 + tailNoise * 0.6) * thinnessFactor;
           }
 
-          o = tanh(pow(o / 100.0, vec4(1.6)));
-          gl_FragColor = o * 1.5;
+          o = tanh(pow(o / 120.0, vec4(1.8)));
+          gl_FragColor = o * 1.2;
         }
       `,
       transparent: true
@@ -100,22 +98,12 @@ const AnimatedShaderBackground = () => {
     scene.add(mesh);
 
     let frameId: number;
-    let lastTime = performance.now();
-    const targetFPS = 30; // Limitar a 30 FPS para melhor performance
-    const frameInterval = 1000 / targetFPS;
-
-    const animate = (currentTime: number) => {
-      const deltaTime = currentTime - lastTime;
-      
-      if (deltaTime >= frameInterval) {
-        material.uniforms.iTime.value += deltaTime / 1000; // Usar deltaTime real
-        renderer.render(scene, camera);
-        lastTime = currentTime - (deltaTime % frameInterval);
-      }
-      
+    const animate = () => {
+      material.uniforms.iTime.value += 0.016;
+      renderer.render(scene, camera);
       frameId = requestAnimationFrame(animate);
     };
-    animate(performance.now());
+    animate();
 
     const handleResize = () => {
       renderer.setSize(window.innerWidth, window.innerHeight);
@@ -137,22 +125,23 @@ const AnimatedShaderBackground = () => {
 
   return (
     <>
-      <div 
-        ref={containerRef} 
+      {/* Fundo preto sólido */}
+      <div
         className="fixed inset-0 w-full h-full"
-        style={{ 
+        style={{
+          backgroundColor: '#000000',
+          zIndex: -1,
+          pointerEvents: 'none'
+        }}
+      />
+      {/* Shader aurora por cima */}
+      <div
+        ref={containerRef}
+        className="fixed inset-0 w-full h-full"
+        style={{
           pointerEvents: 'none',
           zIndex: 0,
           backgroundColor: 'transparent'
-        }}
-      />
-      {/* Fallback visual para debug - remover depois */}
-      <div 
-        className="fixed inset-0 w-full h-full pointer-events-none"
-        style={{ 
-          zIndex: -1,
-          background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 51, 234, 0.1) 50%, rgba(16, 185, 129, 0.1) 100%)',
-          opacity: 0.3
         }}
       />
     </>

@@ -20,6 +20,7 @@ import {
   Clock,
   DollarSign
 } from 'lucide-react'
+import SimpleBackground from '@/components/ui/simple-background'
 
 interface User {
   id: string
@@ -166,7 +167,7 @@ export default function AdminPage() {
 
   const getPlanBadge = (plan: string | null) => {
     const colors = {
-      FREE: 'bg-zinc-500/20 text-zinc-400',
+      FREE: 'bg-zinc-500/20 text-zinc-300 font-medium',
       BASIC: 'bg-blue-500/20 text-blue-400',
       PREMIUM: 'bg-purple-500/20 text-purple-400'
     }
@@ -178,7 +179,7 @@ export default function AdminPage() {
       TRIAL: 'bg-yellow-500/20 text-yellow-400',
       ACTIVE: 'bg-green-500/20 text-green-400',
       EXPIRED: 'bg-red-500/20 text-red-400',
-      CANCELLED: 'bg-zinc-500/20 text-zinc-400'
+      CANCELLED: 'bg-zinc-500/20 text-zinc-300 font-medium'
     }
     return colors[status as keyof typeof colors] || colors.TRIAL
   }
@@ -186,20 +187,24 @@ export default function AdminPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="text-zinc-400">Carregando...</div>
+        <div className="text-zinc-300 font-medium">Carregando...</div>
       </div>
     )
   }
 
   return (
-    <div className="p-6 space-y-6">
+    <>
+      <div className="fixed inset-0" style={{ zIndex: -1 }}>
+        <SimpleBackground />
+      </div>
+      <div className="min-h-screen relative p-6 space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+          <h1 className="text-3xl font-bold drop-shadow-lg bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
             Painel Administrativo
           </h1>
-          <p className="text-zinc-400 mt-1">Controle total sobre usuários e assinaturas</p>
+          <p className="text-zinc-300 font-medium mt-1">Controle total sobre usuários e assinaturas</p>
         </div>
         <div className="flex items-center gap-2 px-4 py-2 bg-red-500/10 border border-red-500/20 rounded-lg">
           <Shield className="h-5 w-5 text-red-400" />
@@ -213,12 +218,12 @@ export default function AdminPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6"
+            className="bg-black/20 backdrop-blur-md border border-white/10 shadow-2xl rounded-xl p-6"
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-zinc-400 text-sm">Total de Usuários</p>
-                <p className="text-3xl font-bold text-white mt-2">{stats.users.total}</p>
+                <p className="text-zinc-300 font-medium text-sm">Total de Usuários</p>
+                <p className="text-3xl font-bold drop-shadow-lg text-white mt-2">{stats.users.total}</p>
               </div>
               <Users className="h-8 w-8 text-blue-400" />
             </div>
@@ -228,12 +233,12 @@ export default function AdminPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6"
+            className="bg-black/20 backdrop-blur-md border border-white/10 shadow-2xl rounded-xl p-6"
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-zinc-400 text-sm">Usuários Ativos</p>
-                <p className="text-3xl font-bold text-green-400 mt-2">{stats.users.active}</p>
+                <p className="text-zinc-300 font-medium text-sm">Usuários Ativos</p>
+                <p className="text-3xl font-bold drop-shadow-lg text-green-400 mt-2">{stats.users.active}</p>
               </div>
               <UserCheck className="h-8 w-8 text-green-400" />
             </div>
@@ -243,12 +248,12 @@ export default function AdminPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6"
+            className="bg-black/20 backdrop-blur-md border border-white/10 shadow-2xl rounded-xl p-6"
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-zinc-400 text-sm">Plano Básico</p>
-                <p className="text-3xl font-bold text-blue-400 mt-2">{stats.users.basic}</p>
+                <p className="text-zinc-300 font-medium text-sm">Plano Básico</p>
+                <p className="text-3xl font-bold drop-shadow-lg text-blue-400 mt-2">{stats.users.basic}</p>
               </div>
               <CreditCard className="h-8 w-8 text-blue-400" />
             </div>
@@ -258,12 +263,12 @@ export default function AdminPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6"
+            className="bg-black/20 backdrop-blur-md border border-white/10 shadow-2xl rounded-xl p-6"
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-zinc-400 text-sm">Plano Premium</p>
-                <p className="text-3xl font-bold text-purple-400 mt-2">{stats.users.premium}</p>
+                <p className="text-zinc-300 font-medium text-sm">Plano Premium</p>
+                <p className="text-3xl font-bold drop-shadow-lg text-purple-400 mt-2">{stats.users.premium}</p>
               </div>
               <Crown className="h-8 w-8 text-purple-400" />
             </div>
@@ -272,24 +277,24 @@ export default function AdminPage() {
       )}
 
       {/* Filters */}
-      <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4">
+      <div className="bg-black/20 backdrop-blur-md border border-white/10 shadow-2xl rounded-xl p-4">
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-zinc-400" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-zinc-300 font-medium" />
             <input
               type="text"
               placeholder="Buscar por nome ou email..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-black/50 border border-white/10 rounded-lg text-white placeholder-zinc-400 focus:outline-none focus:border-blue-500"
+              className="w-full pl-10 pr-4 py-2 bg-black/30 backdrop-blur-md border border-white/10 rounded-lg text-white placeholder-zinc-400 focus:outline-none focus:border-blue-500"
             />
           </div>
           <div className="flex items-center gap-2">
-            <Filter className="h-5 w-5 text-zinc-400" />
+            <Filter className="h-5 w-5 text-zinc-300 font-medium" />
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className="px-4 py-2 bg-black/50 border border-white/10 rounded-lg text-white focus:outline-none focus:border-blue-500"
+              className="px-4 py-2 bg-black/30 backdrop-blur-md border border-white/10 rounded-lg text-white focus:outline-none focus:border-blue-500"
             >
               <option value="all">Todos</option>
               <option value="active">Ativos</option>
@@ -304,16 +309,16 @@ export default function AdminPage() {
       </div>
 
       {/* Users Table */}
-      <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden">
+      <div className="bg-black/20 backdrop-blur-md border border-white/10 shadow-2xl rounded-xl overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-white/5 border-b border-white/10">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-semibold text-zinc-400 uppercase">Usuário</th>
-                <th className="px-6 py-3 text-left text-xs font-semibold text-zinc-400 uppercase">Status</th>
-                <th className="px-6 py-3 text-left text-xs font-semibold text-zinc-400 uppercase">Plano</th>
-                <th className="px-6 py-3 text-left text-xs font-semibold text-zinc-400 uppercase">Dados</th>
-                <th className="px-6 py-3 text-left text-xs font-semibold text-zinc-400 uppercase">Ações</th>
+                <th className="px-6 py-3 text-left text-xs font-semibold text-zinc-300 font-medium uppercase">Usuário</th>
+                <th className="px-6 py-3 text-left text-xs font-semibold text-zinc-300 font-medium uppercase">Status</th>
+                <th className="px-6 py-3 text-left text-xs font-semibold text-zinc-300 font-medium uppercase">Plano</th>
+                <th className="px-6 py-3 text-left text-xs font-semibold text-zinc-300 font-medium uppercase">Dados</th>
+                <th className="px-6 py-3 text-left text-xs font-semibold text-zinc-300 font-medium uppercase">Ações</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/10">
@@ -327,7 +332,7 @@ export default function AdminPage() {
                           <Shield className="h-4 w-4 text-purple-400" />
                         )}
                       </div>
-                      <p className="text-sm text-zinc-400">{user.email}</p>
+                      <p className="text-sm text-zinc-300 font-medium">{user.email}</p>
                       <p className="text-xs text-zinc-500 mt-1">
                         Cadastrado em {new Date(user.createdAt).toLocaleDateString('pt-BR')}
                       </p>
@@ -339,7 +344,7 @@ export default function AdminPage() {
                         <select
                           value={editData.subscriptionStatus || 'TRIAL'}
                           onChange={(e) => setEditData({ ...editData, subscriptionStatus: e.target.value })}
-                          className="w-full px-3 py-1 bg-black/50 border border-white/10 rounded text-white text-sm focus:outline-none focus:border-blue-500"
+                          className="w-full px-3 py-1 bg-black/30 backdrop-blur-md border border-white/10 rounded text-white text-sm focus:outline-none focus:border-blue-500"
                         >
                           <option value="TRIAL">TRIAL</option>
                           <option value="ACTIVE">ACTIVE</option>
@@ -353,7 +358,7 @@ export default function AdminPage() {
                             onChange={(e) => setEditData({ ...editData, isActive: e.target.checked })}
                             className="rounded"
                           />
-                          <span className="text-xs text-zinc-400">Conta Ativa</span>
+                          <span className="text-xs text-zinc-300 font-medium">Conta Ativa</span>
                         </div>
                       </div>
                     ) : (
@@ -383,7 +388,7 @@ export default function AdminPage() {
                         <select
                           value={editData.subscriptionPlan || 'FREE'}
                           onChange={(e) => setEditData({ ...editData, subscriptionPlan: e.target.value })}
-                          className="w-full px-3 py-1 bg-black/50 border border-white/10 rounded text-white text-sm focus:outline-none focus:border-blue-500"
+                          className="w-full px-3 py-1 bg-black/30 backdrop-blur-md border border-white/10 rounded text-white text-sm focus:outline-none focus:border-blue-500"
                         >
                           <option value="FREE">FREE</option>
                           <option value="BASIC">BASIC</option>
@@ -397,7 +402,7 @@ export default function AdminPage() {
                               onChange={(e) => setEditData({ ...editData, role: e.target.checked ? 'ADMIN' : 'USER' })}
                               className="rounded"
                             />
-                            <span className="text-xs text-zinc-400">Tornar Admin</span>
+                            <span className="text-xs text-zinc-300 font-medium">Tornar Admin</span>
                           </div>
                         )}
                       </div>
@@ -408,7 +413,7 @@ export default function AdminPage() {
                     )}
                   </td>
                   <td className="px-6 py-4">
-                    <div className="text-sm text-zinc-400 space-y-1">
+                    <div className="text-sm text-zinc-300 font-medium space-y-1">
                       <p>💰 {user._count.transactions} transações</p>
                       <p>🎯 {user._count.goals} metas</p>
                       <p>📈 {user._count.investments} investimentos</p>
@@ -450,10 +455,11 @@ export default function AdminPage() {
       </div>
 
       {filteredUsers.length === 0 && (
-        <div className="text-center py-12 text-zinc-400">
+        <div className="text-center py-12 text-zinc-300 font-medium">
           Nenhum usuário encontrado
         </div>
       )}
-    </div>
+      </div>
+    </>
   )
 }

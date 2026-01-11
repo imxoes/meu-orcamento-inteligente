@@ -281,15 +281,17 @@ function DashboardLayoutContent({
         {/* Mobile header */}
         <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-purple-500/20 bg-black/80 backdrop-blur-xl px-4 shadow-sm lg:hidden">
           <button
-            type="button"
             onClick={() => setSidebarOpen(true)}
             className="text-zinc-400 hover:text-white"
           >
             <Menu className="h-6 w-6" />
           </button>
           <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
-            <div className="flex items-center">
-              <h1 className="text-lg font-semibold text-white">Dashboard</h1>
+            <div className="flex items-center justify-center flex-1">
+              <h1 className="text-xl font-semibold text-white">
+                <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Orbi</span>
+                <span className="text-white"> - Dashboard</span>
+              </h1>
             </div>
           </div>
           <button
@@ -304,8 +306,11 @@ function DashboardLayoutContent({
         {/* Desktop header */}
         <div className="hidden lg:flex sticky top-0 z-40 h-16 shrink-0 items-center gap-x-4 border-b border-purple-500/20 bg-black/80 backdrop-blur-xl px-8 shadow-sm">
           <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
-            <div className="flex items-center">
-              <h1 className="text-xl font-semibold text-white">Dashboard</h1>
+            <div className="flex items-center justify-center flex-1">
+              <h1 className="text-xl font-semibold text-white">
+                <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Orbi</span>
+                <span className="text-white"> - Dashboard</span>
+              </h1>
             </div>
           </div>
           <button

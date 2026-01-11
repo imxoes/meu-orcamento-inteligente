@@ -15,6 +15,7 @@ import {
   Loader2
 } from 'lucide-react'
 import Link from 'next/link'
+import SimpleBackground from '@/components/ui/simple-background'
 
 interface SubscriptionData {
   status: string
@@ -132,7 +133,11 @@ export default function SubscriptionPage() {
   const isActive = subscription?.status === 'ACTIVE'
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900 p-4 md:p-8">
+    <>
+      <div className="fixed inset-0" style={{ zIndex: -1 }}>
+        <SimpleBackground />
+      </div>
+      <div className="min-h-screen relative p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <motion.div
@@ -153,7 +158,7 @@ export default function SubscriptionPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-8 p-6 bg-gradient-to-r from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl"
+            className="mb-8 p-6 bg-black/20 backdrop-blur-md border border-white/10 shadow-2xl rounded-xl"
           >
             <div className="flex items-center justify-between flex-wrap gap-4">
               <div>
@@ -194,10 +199,10 @@ export default function SubscriptionPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: plan.id === 'BASIC' ? 0.1 : 0.2 }}
-                className={`relative p-8 bg-zinc-800/50 border-2 rounded-xl ${
+                className={`relative p-8 bg-black/20 backdrop-blur-md border-2 rounded-xl ${
                   plan.popular
                     ? 'border-purple-500/50 shadow-lg shadow-purple-500/20'
-                    : 'border-zinc-700/50'
+                    : 'border-white/10 shadow-2xl'
                 }`}
               >
                 {plan.popular && (
@@ -269,7 +274,7 @@ export default function SubscriptionPage() {
                 )}
 
                 {isCurrentPlan && (
-                  <div className="mt-4 p-4 bg-zinc-700/30 rounded-lg">
+                  <div className="mt-4 p-4 bg-black/30 backdrop-blur-md rounded-lg">
                     <p className="text-sm text-zinc-400 text-center">
                       Você está usando este plano
                     </p>
@@ -285,7 +290,7 @@ export default function SubscriptionPage() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="p-6 bg-gradient-to-r from-yellow-500/10 to-orange-500/10 border border-yellow-500/20 rounded-xl mb-8"
+            className="p-6 bg-black/20 backdrop-blur-md border border-white/10 shadow-2xl rounded-xl mb-8"
           >
             <div className="flex items-start gap-4">
               <AlertCircle className="w-6 h-6 text-yellow-400 flex-shrink-0 mt-0.5" />
@@ -310,7 +315,7 @@ export default function SubscriptionPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="p-6 bg-zinc-800/50 border border-zinc-700/50 rounded-xl"
+            className="p-6 bg-black/20 backdrop-blur-md border border-white/10 shadow-2xl rounded-xl"
           >
             <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
               <CreditCard className="w-5 h-5" />
@@ -320,7 +325,7 @@ export default function SubscriptionPage() {
               {subscription.recentPayments.map((payment: any) => (
                 <div
                   key={payment.id}
-                  className="flex items-center justify-between p-4 bg-zinc-700/30 rounded-lg"
+                  className="flex items-center justify-between p-4 bg-black/30 backdrop-blur-md rounded-lg"
                 >
                   <div>
                     <p className="text-white font-semibold">
@@ -348,7 +353,8 @@ export default function SubscriptionPage() {
           </motion.div>
         )}
       </div>
-    </div>
+      </div>
+    </>
   )
 }
 

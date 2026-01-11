@@ -17,6 +17,7 @@ import {
   CheckCircle,
   Info
 } from 'lucide-react'
+import SimpleBackground from '@/components/ui/simple-background'
 
 const monthlyData: any[] = []
 
@@ -43,7 +44,11 @@ export default function AnalysisPage() {
   const savingsChange = (previousMonthData.savings || 0) > 0 ? (((lastMonthData.savings || 0) - (previousMonthData.savings || 0)) / (previousMonthData.savings || 1)) * 100 : 0
 
   return (
-    <div className="space-y-6">
+    <>
+      <div className="fixed inset-0" style={{ zIndex: -1 }}>
+        <SimpleBackground />
+      </div>
+      <div className="min-h-screen relative space-y-6 p-6">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -99,7 +104,7 @@ export default function AnalysisPage() {
         transition={{ duration: 0.6, delay: 0.1 }}
         className="grid grid-cols-1 md:grid-cols-4 gap-6"
       >
-        <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-purple-500/20 rounded-xl p-6 backdrop-blur-sm">
+        <div className="bg-black/25 backdrop-blur-md border border-blue-400/20 shadow-2xl ring-1 ring-blue-400/10 rounded-xl p-6 backdrop-blur-sm">
           <div className="flex items-center justify-between mb-4">
             <DollarSign className="w-8 h-8 text-blue-400" />
             <div className="flex items-center gap-1">
@@ -113,11 +118,11 @@ export default function AnalysisPage() {
               </span>
             </div>
           </div>
-          <h3 className="text-zinc-400 text-sm">Receita Mensal Média</h3>
-          <p className="text-white text-2xl font-bold">R$ {(totalIncome / monthlyData.length).toLocaleString()}</p>
+          <h3 className="text-zinc-300 font-medium text-sm">Receita Mensal Média</h3>
+          <p className="text-white text-2xl font-bold drop-shadow-lg">R$ {(totalIncome / monthlyData.length).toLocaleString()}</p>
         </div>
 
-        <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-purple-500/20 rounded-xl p-6 backdrop-blur-sm">
+        <div className="bg-black/25 backdrop-blur-md border border-blue-400/20 shadow-2xl ring-1 ring-blue-400/10 rounded-xl p-6 backdrop-blur-sm">
           <div className="flex items-center justify-between mb-4">
             <TrendingDown className="w-8 h-8 text-purple-400" />
             <div className="flex items-center gap-1">
@@ -131,11 +136,11 @@ export default function AnalysisPage() {
               </span>
             </div>
           </div>
-          <h3 className="text-zinc-400 text-sm">Gasto Mensal Médio</h3>
-          <p className="text-white text-2xl font-bold">R$ {(totalExpenses / monthlyData.length).toLocaleString()}</p>
+          <h3 className="text-zinc-300 font-medium text-sm">Gasto Mensal Médio</h3>
+          <p className="text-white text-2xl font-bold drop-shadow-lg">R$ {(totalExpenses / monthlyData.length).toLocaleString()}</p>
         </div>
 
-        <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-purple-500/20 rounded-xl p-6 backdrop-blur-sm">
+        <div className="bg-black/25 backdrop-blur-md border border-blue-400/20 shadow-2xl ring-1 ring-blue-400/10 rounded-xl p-6 backdrop-blur-sm">
           <div className="flex items-center justify-between mb-4">
             <TrendingUp className="w-8 h-8 text-blue-400" />
             <div className="flex items-center gap-1">
@@ -149,19 +154,19 @@ export default function AnalysisPage() {
               </span>
             </div>
           </div>
-          <h3 className="text-zinc-400 text-sm">Economia Mensal Média</h3>
-          <p className="text-white text-2xl font-bold">R$ {(totalSavings / monthlyData.length).toLocaleString()}</p>
+          <h3 className="text-zinc-300 font-medium text-sm">Economia Mensal Média</h3>
+          <p className="text-white text-2xl font-bold drop-shadow-lg">R$ {(totalSavings / monthlyData.length).toLocaleString()}</p>
         </div>
 
-        <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-purple-500/20 rounded-xl p-6 backdrop-blur-sm">
+        <div className="bg-black/25 backdrop-blur-md border border-blue-400/20 shadow-2xl ring-1 ring-blue-400/10 rounded-xl p-6 backdrop-blur-sm">
           <div className="flex items-center justify-between mb-4">
             <Target className="w-8 h-8 text-purple-400" />
             <div className="flex items-center gap-1">
               <span className="text-sm text-green-400">Saudável</span>
             </div>
           </div>
-          <h3 className="text-zinc-400 text-sm">Taxa de Poupança</h3>
-          <p className="text-white text-2xl font-bold">{savingsRate.toFixed(1)}%</p>
+          <h3 className="text-zinc-300 font-medium text-sm">Taxa de Poupança</h3>
+          <p className="text-white text-2xl font-bold drop-shadow-lg">{savingsRate.toFixed(1)}%</p>
         </div>
       </motion.div>
 
@@ -171,9 +176,9 @@ export default function AnalysisPage() {
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="bg-gradient-to-br from-blue-500/5 to-purple-500/5 backdrop-blur-sm border border-purple-500/20 rounded-xl p-6"
+          className="bg-black/20 backdrop-blur-md border border-white/10 shadow-2xl rounded-xl p-6"
         >
-          <h3 className="text-xl font-bold text-white mb-6">Evolução Financeira</h3>
+          <h3 className="text-xl font-bold drop-shadow-lg text-white mb-6">Evolução Financeira</h3>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
               <ComposedChart data={monthlyData}>
@@ -220,9 +225,9 @@ export default function AnalysisPage() {
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="bg-gradient-to-br from-blue-500/5 to-purple-500/5 backdrop-blur-sm border border-purple-500/20 rounded-xl p-6"
+          className="bg-black/20 backdrop-blur-md border border-white/10 shadow-2xl rounded-xl p-6"
         >
-          <h3 className="text-xl font-bold text-white mb-6">Insights Inteligentes</h3>
+          <h3 className="text-xl font-bold drop-shadow-lg text-white mb-6">Insights Inteligentes</h3>
           <div className="space-y-4">
             {insights.map((insight, index) => {
               const Icon = insight.icon
@@ -237,12 +242,12 @@ export default function AnalysisPage() {
                     </div>
                     <div className="flex-1">
                       <div className="flex items-start justify-between mb-2">
-                        <h4 className="text-white font-medium">{insight.title}</h4>
+                        <h4 className="text-white font-bold drop-shadow-lg">{insight.title}</h4>
                         <span className={`text-sm font-bold ${insight.type === 'positive' ? 'text-green-400' : insight.type === 'warning' ? 'text-yellow-400' : 'text-blue-400'}`}>
                           {insight.value}
                         </span>
                       </div>
-                      <p className="text-zinc-400 text-sm">{insight.description}</p>
+                      <p className="text-zinc-300 font-medium text-sm">{insight.description}</p>
                     </div>
                   </div>
                 </div>
@@ -257,9 +262,9 @@ export default function AnalysisPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.4 }}
-        className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-sm border border-white/10 rounded-2xl p-6"
+        className="bg-black/20 backdrop-blur-md border border-white/10 shadow-2xl rounded-2xl p-6"
       >
-        <h3 className="text-xl font-bold text-white mb-6">Análise por Categoria</h3>
+        <h3 className="text-xl font-bold drop-shadow-lg text-white mb-6">Análise por Categoria</h3>
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="text-left border-b border-white/10">
@@ -277,7 +282,7 @@ export default function AnalysisPage() {
             <tbody className="divide-y divide-white/5">
               {categoryTrends.map((category, index) => (
                 <tr key={index} className="hover:bg-white/5 transition-colors">
-                  <td className="py-3 text-white font-medium">{category.category}</td>
+                  <td className="py-3 text-white font-bold drop-shadow-lg">{category.category}</td>
                   <td className="py-3 text-zinc-300">R$ {category.jan}</td>
                   <td className="py-3 text-zinc-300">R$ {category.fev}</td>
                   <td className="py-3 text-zinc-300">R$ {category.mar}</td>
@@ -308,6 +313,7 @@ export default function AnalysisPage() {
           </table>
         </div>
       </motion.div>
-    </div>
+      </div>
+    </>
   )
 }

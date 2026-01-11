@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { LogIn, Mail, Lock, Eye, EyeOff } from 'lucide-react'
-import AnimatedShaderBackground from '@/components/ui/animated-shader-background'
+import SimpleBackground from '@/components/ui/simple-background'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -88,7 +88,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 relative" style={{ backgroundColor: '#000000' }}>
-      <AnimatedShaderBackground />
+      <SimpleBackground />
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}

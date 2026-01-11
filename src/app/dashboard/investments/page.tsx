@@ -12,6 +12,7 @@ import {
   RefreshCw
 } from 'lucide-react'
 import { useValuesVisibility, formatCurrency } from '@/contexts/ValuesVisibilityContext'
+import SimpleBackground from '@/components/ui/simple-background'
 
 type Investment = {
   id: string
@@ -264,7 +265,11 @@ export default function InvestmentsPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <>
+      <div className="fixed inset-0" style={{ zIndex: -1 }}>
+        <SimpleBackground />
+      </div>
+      <div className="min-h-screen relative space-y-6 p-6">
       {/* Header with Stats */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -272,21 +277,21 @@ export default function InvestmentsPage() {
         transition={{ duration: 0.6 }}
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-purple-500/20 rounded-xl p-6 backdrop-blur-sm">
+          <div className="bg-black/25 backdrop-blur-md border border-blue-400/20 rounded-xl shadow-2xl ring-1 ring-blue-400/10 p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-blue-400 text-sm font-medium">Total Investido</p>
-                <p className="text-white text-2xl font-bold mt-1">{formatCurrency(totalInvested, showValues)}</p>
+                <p className="text-zinc-300 font-medium text-sm">Total Investido</p>
+                <p className="text-white text-2xl font-bold drop-shadow-lg mt-1">{formatCurrency(totalInvested, showValues)}</p>
               </div>
               <TrendingUp className="w-8 h-8 text-blue-400" />
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-purple-500/20 rounded-xl p-6 backdrop-blur-sm">
+          <div className="bg-black/25 backdrop-blur-md border border-blue-400/20 rounded-xl shadow-2xl ring-1 ring-blue-400/10 p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-blue-400 text-sm font-medium">Investimentos</p>
-                <p className="text-white text-2xl font-bold mt-1">{investments.length}</p>
+                <p className="text-zinc-300 font-medium text-sm">Investimentos</p>
+                <p className="text-white text-2xl font-bold drop-shadow-lg mt-1">{investments.length}</p>
               </div>
               <DollarSign className="w-8 h-8 text-blue-400" />
             </div>
@@ -294,7 +299,7 @@ export default function InvestmentsPage() {
         </div>
 
         {/* Controls */}
-        <div className="bg-gradient-to-br from-blue-500/5 to-purple-500/5 backdrop-blur-sm border border-purple-500/20 rounded-xl p-6">
+        <div className="bg-black/20 backdrop-blur-md border border-white/10 shadow-2xl rounded-xl p-6">
           <div className="flex justify-end">
             <button
               onClick={() => setShowAddForm(true)}
@@ -328,14 +333,14 @@ export default function InvestmentsPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
-                className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:border-white/20 transition-all duration-300"
+                className="bg-black/20 backdrop-blur-md border border-white/10 shadow-2xl rounded-2xl p-6 hover:border-white/20 transition-all duration-300"
               >
                 {/* Header */}
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
-                    <h3 className="text-white font-semibold text-lg mb-2">{String(investment.title || '')}</h3>
+                    <h3 className="text-white font-bold drop-shadow-lg text-lg mb-2">{String(investment.title || '')}</h3>
                     {investment.description && (
-                      <p className="text-zinc-400 text-sm line-clamp-2">{String(investment.description)}</p>
+                      <p className="text-zinc-300 font-medium text-sm line-clamp-2">{String(investment.description)}</p>
                     )}
                   </div>
 
@@ -350,7 +355,7 @@ export default function InvestmentsPage() {
                 {/* Amount */}
                 <div className="space-y-3 mb-4">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-zinc-400">Valor Investido</span>
+                    <span className="text-sm text-zinc-300 font-medium">Valor Investido</span>
                     <span className="text-white text-2xl font-bold">{formatCurrency(investment.currentAmount, showValues)}</span>
                   </div>
                 </div>
@@ -535,6 +540,7 @@ export default function InvestmentsPage() {
           </motion.div>
         </div>
       )}
-    </div>
+      </div>
+    </>
   )
 }

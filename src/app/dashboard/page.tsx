@@ -16,6 +16,7 @@ import {
   PieChart
 } from 'lucide-react'
 import { useValuesVisibility, formatCurrency } from '@/contexts/ValuesVisibilityContext'
+import SimpleBackground from '@/components/ui/simple-background'
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
@@ -108,7 +109,11 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="space-y-8">
+    <>
+      <div className="fixed inset-0" style={{ zIndex: -1 }}>
+        <SimpleBackground />
+      </div>
+      <div className="min-h-screen relative space-y-8 p-6">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -117,8 +122,8 @@ export default function Dashboard() {
       >
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-8">
           <div>
-            <h1 className="text-3xl lg:text-4xl font-bold text-white">Olá, {user?.name ? String(user.name) : 'Usuário'}!</h1>
-            <p className="text-zinc-500 text-lg">
+            <h1 className="text-3xl lg:text-4xl font-bold text-white drop-shadow-lg">Olá, {user?.name ? String(user.name) : 'Usuário'}!</h1>
+            <p className="text-zinc-300 text-lg drop-shadow-md">
               {formatDate(currentDate).toLowerCase()}
             </p>
           </div>
@@ -132,52 +137,52 @@ export default function Dashboard() {
           </Link>
         </div>
 
-        {/* Mini Stats Cards */}
+        {/* KPI Cards - Visual destaque */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
-          <div className="bg-gradient-to-r from-blue-500/5 to-purple-500/5 border border-purple-500/20 rounded-lg p-4">
+          <div className="bg-black/20 backdrop-blur-md border border-white/10 rounded-lg p-4 shadow-2xl">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-zinc-500 text-sm">Saldo Total</p>
-                <p className="text-white text-xl font-semibold">{formatCurrency(stats?.totalBalance || 0, showValues)}</p>
+                <p className="text-zinc-300 text-sm font-medium">Saldo Total</p>
+                <p className="text-white text-xl font-bold drop-shadow-lg">{formatCurrency(stats?.totalBalance || 0, showValues)}</p>
               </div>
               <Wallet className="w-5 h-5 text-blue-400" />
             </div>
           </div>
 
-          <div className="bg-gradient-to-r from-blue-500/5 to-purple-500/5 border border-purple-500/20 rounded-lg p-4">
+          <div className="bg-black/20 backdrop-blur-md border border-white/10 rounded-lg p-4 shadow-2xl">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-zinc-500 text-sm">Receitas do Mês</p>
+                <p className="text-zinc-300 text-sm font-medium">Receitas do Mês</p>
                 <p className="text-white text-xl font-semibold">{formatCurrency(stats?.monthlyIncome || 0, showValues)}</p>
               </div>
               <TrendingUp className="w-5 h-5 text-blue-400" />
             </div>
           </div>
 
-          <div className="bg-gradient-to-r from-blue-500/5 to-purple-500/5 border border-purple-500/20 rounded-lg p-4">
+          <div className="bg-black/20 backdrop-blur-md border border-white/10 rounded-lg p-4 shadow-2xl">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-zinc-500 text-sm">Gastos do Mês</p>
+                <p className="text-zinc-300 text-sm font-medium">Gastos do Mês</p>
                 <p className="text-white text-xl font-semibold">{formatCurrency(Math.abs(stats?.monthlyExpenses || 0), showValues)}</p>
               </div>
               <TrendingDown className="w-5 h-5 text-purple-400" />
             </div>
           </div>
 
-          <div className="bg-gradient-to-r from-blue-500/5 to-purple-500/5 border border-purple-500/20 rounded-lg p-4">
+          <div className="bg-black/20 backdrop-blur-md border border-white/10 rounded-lg p-4 shadow-2xl">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-zinc-500 text-sm">Economia do Mês</p>
+                <p className="text-zinc-300 text-sm font-medium">Economia do Mês</p>
                 <p className="text-white text-xl font-semibold">{formatCurrency(stats?.monthlySavings || 0, showValues)}</p>
               </div>
               <DollarSign className="w-5 h-5 text-purple-400" />
             </div>
           </div>
 
-          <div className="bg-gradient-to-r from-blue-500/5 to-purple-500/5 border border-purple-500/20 rounded-lg p-4">
+          <div className="bg-black/20 backdrop-blur-md border border-white/10 rounded-lg p-4 shadow-2xl">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-zinc-500 text-sm">Total Investimentos</p>
+                <p className="text-zinc-300 text-sm font-medium">Total Investimentos</p>
                 <p className="text-white text-xl font-semibold">
                   {formatCurrency(
                     investments.reduce((sum, inv) => sum + (inv.currentAmount || 0), 0),
@@ -198,11 +203,11 @@ export default function Dashboard() {
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="bg-gradient-to-br from-white/5 to-blue-500/5 border border-purple-500/20 rounded-lg backdrop-blur-sm"
+          className="bg-black/20 backdrop-blur-md border border-white/10 rounded-lg shadow-2xl"
         >
-          <div className="p-6 border-b border-purple-500/10">
+          <div className="p-6 border-b border-white/10">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-white">Transações Recentes</h2>
+              <h2 className="text-lg font-bold text-white drop-shadow-lg">Transações Recentes</h2>
               <Link
                 href="/dashboard/transactions"
                 className="text-sm text-zinc-400 hover:text-blue-400 transition-colors"
@@ -215,11 +220,11 @@ export default function Dashboard() {
           <div className="p-6">
             {loading ? (
               <div className="text-center py-8">
-                <p className="text-zinc-500">Carregando...</p>
+                <p className="text-zinc-300">Carregando...</p>
               </div>
             ) : transactions.length === 0 ? (
               <div className="text-center py-8">
-                <p className="text-zinc-500">Nenhuma transação registrada</p>
+                <p className="text-zinc-300 font-medium">Nenhuma transação registrada</p>
                 <Link
                   href="/dashboard/transactions"
                   className="text-sm text-blue-400 hover:text-purple-400 transition-colors"
@@ -230,7 +235,7 @@ export default function Dashboard() {
             ) : (
               <div className="space-y-4">
                 {transactions.map((transaction) => (
-                  <div key={transaction.id} className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                  <div key={transaction.id} className="flex items-center justify-between p-3 bg-black/10 backdrop-blur-sm rounded-lg border border-white/5">
                     <div className="flex items-center gap-3">
                       <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
                         transaction.type === 'INCOME' ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
@@ -268,11 +273,11 @@ export default function Dashboard() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.25 }}
-          className="bg-gradient-to-br from-white/5 to-purple-500/5 border border-purple-500/20 rounded-lg backdrop-blur-sm"
+          className="bg-black/20 backdrop-blur-md border border-white/10 rounded-lg shadow-2xl"
         >
-          <div className="p-6 border-b border-purple-500/10">
+          <div className="p-6 border-b border-white/10">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-white">Top 5 Categorias</h2>
+              <h2 className="text-lg font-bold text-white drop-shadow-lg">Top 5 Categorias</h2>
               <Link
                 href="/dashboard/expenses"
                 className="text-sm text-zinc-400 hover:text-blue-400 transition-colors"
@@ -285,7 +290,7 @@ export default function Dashboard() {
           <div className="p-6">
             {loading ? (
               <div className="text-center py-8">
-                <p className="text-zinc-500">Carregando...</p>
+                <p className="text-zinc-300">Carregando...</p>
               </div>
             ) : (() => {
               // Calcular top 5 categorias do mês
@@ -312,7 +317,7 @@ export default function Dashboard() {
               if (topCategories.length === 0) {
                 return (
                   <div className="text-center py-8">
-                    <p className="text-zinc-500">Nenhum gasto este mês</p>
+                    <p className="text-zinc-300 font-medium">Nenhum gasto este mês</p>
                     <Link
                       href="/dashboard/transactions"
                       className="text-sm text-blue-400 hover:text-purple-400 transition-colors"
@@ -360,11 +365,11 @@ export default function Dashboard() {
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="bg-gradient-to-br from-white/5 to-purple-500/5 border border-purple-500/20 rounded-lg backdrop-blur-sm"
+          className="bg-black/20 backdrop-blur-md border border-white/10 rounded-lg shadow-2xl"
         >
-          <div className="p-6 border-b border-purple-500/10">
+          <div className="p-6 border-b border-white/10">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-white">Metas Financeiras</h2>
+              <h2 className="text-lg font-bold text-white drop-shadow-lg">Metas Financeiras</h2>
               <Link
                 href="/dashboard/goals"
                 className="text-sm text-zinc-400 hover:text-blue-400 transition-colors"
@@ -377,11 +382,11 @@ export default function Dashboard() {
           <div className="p-6">
             {loading ? (
               <div className="text-center py-8">
-                <p className="text-zinc-500">Carregando...</p>
+                <p className="text-zinc-300">Carregando...</p>
               </div>
             ) : goals.length === 0 ? (
               <div className="text-center py-8">
-                <p className="text-zinc-500">Nenhuma meta criada</p>
+                <p className="text-zinc-300 font-medium">Nenhuma meta criada</p>
                 <Link
                   href="/dashboard/goals"
                   className="text-sm text-blue-400 hover:text-purple-400 transition-colors"
@@ -394,7 +399,7 @@ export default function Dashboard() {
                 {goals.slice(0, 3).map((goal) => {
                   const progress = goal.targetAmount > 0 ? (goal.currentAmount / goal.targetAmount) * 100 : 0
                   return (
-                    <div key={goal.id} className="bg-white/5 rounded-lg p-4">
+                    <div key={goal.id} className="bg-black/10 backdrop-blur-sm rounded-lg p-4 border border-white/5">
                       <div className="flex items-center justify-between mb-2">
                         <h3 className="text-white font-medium text-sm">{goal.title}</h3>
                         <span className="text-xs text-zinc-400">{progress.toFixed(0)}%</span>
@@ -435,43 +440,44 @@ export default function Dashboard() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.4 }}
-        className="bg-gradient-to-r from-blue-500/5 to-purple-500/5 border border-purple-500/20 rounded-lg p-6 backdrop-blur-sm"
+        className="bg-black/20 backdrop-blur-md border border-white/10 rounded-lg p-6 shadow-2xl"
       >
-        <h2 className="text-lg font-semibold text-white mb-4">Ações Rápidas</h2>
+        <h2 className="text-lg font-bold text-white drop-shadow-lg mb-4">Ações Rápidas</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <Link
             href="/dashboard/transactions"
-            className="flex items-center gap-3 p-4 bg-gradient-to-r from-blue-500/5 to-purple-500/5 hover:from-blue-500/10 hover:to-purple-500/10 border border-purple-500/20 rounded-lg transition-colors group"
+            className="flex items-center gap-3 p-4 bg-black/10 hover:bg-black/20 backdrop-blur-sm border border-white/10 rounded-lg transition-all duration-300 group shadow-lg hover:shadow-xl"
           >
             <TrendingUp className="w-5 h-5 text-blue-400" />
-            <span className="text-zinc-300 group-hover:text-white transition-colors">Adicionar Receita</span>
+            <span className="text-zinc-200 group-hover:text-white font-medium transition-colors">Adicionar Receita</span>
           </Link>
 
           <Link
             href="/dashboard/transactions"
-            className="flex items-center gap-3 p-4 bg-gradient-to-r from-blue-500/5 to-purple-500/5 hover:from-blue-500/10 hover:to-purple-500/10 border border-purple-500/20 rounded-lg transition-colors group"
+            className="flex items-center gap-3 p-4 bg-black/10 hover:bg-black/20 backdrop-blur-sm border border-white/10 rounded-lg transition-all duration-300 group shadow-lg hover:shadow-xl"
           >
             <TrendingDown className="w-5 h-5 text-purple-400" />
-            <span className="text-zinc-300 group-hover:text-white transition-colors">Registrar Gasto</span>
+            <span className="text-zinc-200 group-hover:text-white font-medium transition-colors">Registrar Gasto</span>
           </Link>
 
           <Link
             href="/dashboard/goals"
-            className="flex items-center gap-3 p-4 bg-gradient-to-r from-blue-500/5 to-purple-500/5 hover:from-blue-500/10 hover:to-purple-500/10 border border-purple-500/20 rounded-lg transition-colors group"
+            className="flex items-center gap-3 p-4 bg-black/10 hover:bg-black/20 backdrop-blur-sm border border-white/10 rounded-lg transition-all duration-300 group shadow-lg hover:shadow-xl"
           >
             <Target className="w-5 h-5 text-blue-400" />
-            <span className="text-zinc-300 group-hover:text-white transition-colors">Criar Meta</span>
+            <span className="text-zinc-200 group-hover:text-white font-medium transition-colors">Criar Meta</span>
           </Link>
 
           <Link
             href="/dashboard/analysis"
-            className="flex items-center gap-3 p-4 bg-gradient-to-r from-blue-500/5 to-purple-500/5 hover:from-blue-500/10 hover:to-purple-500/10 border border-purple-500/20 rounded-lg transition-colors group"
+            className="flex items-center gap-3 p-4 bg-black/10 hover:bg-black/20 backdrop-blur-sm border border-white/10 rounded-lg transition-all duration-300 group shadow-lg hover:shadow-xl"
           >
             <BarChart3 className="w-5 h-5 text-purple-400" />
-            <span className="text-zinc-300 group-hover:text-white transition-colors">Ver Relatório</span>
+            <span className="text-zinc-200 group-hover:text-white font-medium transition-colors">Ver Relatório</span>
           </Link>
         </div>
       </motion.div>
-    </div>
+      </div>
+    </>
   )
 }

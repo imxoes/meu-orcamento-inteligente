@@ -18,6 +18,7 @@ import {
   X
 } from 'lucide-react'
 import { useValuesVisibility, formatCurrency } from '@/contexts/ValuesVisibilityContext'
+import SimpleBackground from '@/components/ui/simple-background'
 
 type Goal = {
   id: string
@@ -227,7 +228,11 @@ export default function GoalsPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <>
+      <div className="fixed inset-0" style={{ zIndex: -1 }}>
+        <SimpleBackground />
+      </div>
+      <div className="min-h-screen relative space-y-6 p-6">
       {/* Header with Stats */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -235,41 +240,41 @@ export default function GoalsPage() {
         transition={{ duration: 0.6 }}
       >
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-purple-500/20 rounded-xl p-6 backdrop-blur-sm">
+          <div className="bg-black/25 backdrop-blur-md border border-blue-400/20 rounded-xl shadow-2xl ring-1 ring-blue-400/10 p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-blue-400 text-sm font-medium">Metas Ativas</p>
-                <p className="text-white text-2xl font-bold mt-1">{activeGoals.length}</p>
+                <p className="text-zinc-300 font-medium text-sm">Metas Ativas</p>
+                <p className="text-white text-2xl font-bold drop-shadow-lg mt-1">{activeGoals.length}</p>
               </div>
               <Target className="w-8 h-8 text-blue-400" />
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-purple-500/20 rounded-xl p-6 backdrop-blur-sm">
+          <div className="bg-black/25 backdrop-blur-md border border-blue-400/20 rounded-xl shadow-2xl ring-1 ring-blue-400/10 p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-blue-400 text-sm font-medium">Concluídas</p>
-                <p className="text-white text-2xl font-bold mt-1">{completedGoals.length}</p>
+                <p className="text-zinc-300 font-medium text-sm">Concluídas</p>
+                <p className="text-white text-2xl font-bold drop-shadow-lg mt-1">{completedGoals.length}</p>
               </div>
               <Award className="w-8 h-8 text-blue-400" />
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-purple-500/20 rounded-xl p-6 backdrop-blur-sm">
+          <div className="bg-black/25 backdrop-blur-md border border-blue-400/20 rounded-xl shadow-2xl ring-1 ring-blue-400/10 p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-purple-400 text-sm font-medium">Total Economizado</p>
-                <p className="text-white text-2xl font-bold mt-1">{formatCurrency(totalSaved, showValues)}</p>
+                <p className="text-zinc-300 font-medium text-sm">Total Economizado</p>
+                <p className="text-white text-2xl font-bold drop-shadow-lg mt-1">{formatCurrency(totalSaved, showValues)}</p>
               </div>
               <PiggyBank className="w-8 h-8 text-purple-400" />
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-purple-500/20 rounded-xl p-6 backdrop-blur-sm">
+          <div className="bg-black/25 backdrop-blur-md border border-blue-400/20 rounded-xl shadow-2xl ring-1 ring-blue-400/10 p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-blue-400 text-sm font-medium">Meta Total</p>
-                <p className="text-white text-2xl font-bold mt-1">{formatCurrency(totalTarget, showValues)}</p>
+                <p className="text-zinc-300 font-medium text-sm">Meta Total</p>
+                <p className="text-white text-2xl font-bold drop-shadow-lg mt-1">{formatCurrency(totalTarget, showValues)}</p>
               </div>
               <TrendingUp className="w-8 h-8 text-blue-400" />
             </div>
@@ -277,7 +282,7 @@ export default function GoalsPage() {
         </div>
 
         {/* Controls */}
-        <div className="bg-gradient-to-br from-blue-500/5 to-purple-500/5 backdrop-blur-sm border border-purple-500/20 rounded-xl p-6">
+        <div className="bg-black/20 backdrop-blur-md border border-white/10 shadow-2xl rounded-xl p-6">
           <div className="flex flex-col lg:flex-row gap-4 justify-between">
             <div className="flex gap-4">
               {['all', 'active', 'completed', 'paused'].map((filter) => (
@@ -327,17 +332,17 @@ export default function GoalsPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
-              className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:border-white/20 transition-all duration-300"
+              className="bg-black/20 backdrop-blur-md border border-white/10 shadow-2xl rounded-2xl p-6 hover:border-white/20 transition-all duration-300"
             >
               {/* Header */}
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
                     {getStatusIcon(goal.status)}
-                    <h3 className="text-white font-semibold text-lg">{goal.title}</h3>
+                    <h3 className="text-white font-bold drop-shadow-lg text-lg">{goal.title}</h3>
                   </div>
                   {goal.description && (
-                    <p className="text-zinc-400 text-sm line-clamp-2">{goal.description}</p>
+                    <p className="text-zinc-300 font-medium text-sm line-clamp-2">{goal.description}</p>
                   )}
                 </div>
 
@@ -352,7 +357,7 @@ export default function GoalsPage() {
               {/* Progress */}
               <div className="space-y-3 mb-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-zinc-400">Progresso</span>
+                  <span className="text-sm text-zinc-300 font-medium">Progresso</span>
                   <span className="text-sm font-medium text-white">{progress.toFixed(1)}%</span>
                 </div>
 
@@ -369,7 +374,7 @@ export default function GoalsPage() {
 
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-green-400">{formatCurrency(goal.currentAmount, showValues)}</span>
-                  <span className="text-zinc-400">{formatCurrency(goal.targetAmount, showValues)}</span>
+                  <span className="text-zinc-300 font-medium">{formatCurrency(goal.targetAmount, showValues)}</span>
                 </div>
               </div>
 
@@ -377,7 +382,7 @@ export default function GoalsPage() {
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <span className="text-xs text-zinc-400">
+                    <span className="text-xs text-zinc-300 font-medium">
                       {goal.status === 'ACTIVE' && 'Ativa'}
                       {goal.status === 'COMPLETED' && 'Concluída'}
                       {goal.status === 'PAUSED' && 'Pausada'}
@@ -386,8 +391,8 @@ export default function GoalsPage() {
 
                   {goal.targetDate && (
                     <div className="flex items-center gap-2 text-sm">
-                      <Calendar className="w-4 h-4 text-zinc-400" />
-                      <span className={`${isOverdue ? 'text-red-400' : 'text-zinc-400'}`}>
+                      <Calendar className="w-4 h-4 text-zinc-300" />
+                      <span className={`${isOverdue ? 'text-red-400' : 'text-zinc-300 font-medium'}`}>
                         {goal.status === 'COMPLETED'
                           ? 'Concluída'
                           : isOverdue
@@ -644,6 +649,7 @@ export default function GoalsPage() {
           </motion.div>
         </div>
       )}
-    </div>
+      </div>
+    </>
   )
 }

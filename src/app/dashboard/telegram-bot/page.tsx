@@ -23,6 +23,7 @@ import {
   Sparkles,
   BarChart3
 } from 'lucide-react'
+import SimpleBackground from '@/components/ui/simple-background'
 
 const botUsername = '@useOrbi_Bot'
 
@@ -167,7 +168,11 @@ export default function TelegramBotPage() {
   const botActive = botStatus?.bot_status === 'ativo'
 
   return (
-    <div className="space-y-6">
+    <>
+      <div className="fixed inset-0" style={{ zIndex: -1 }}>
+        <SimpleBackground />
+      </div>
+      <div className="min-h-screen relative space-y-6 p-6">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -180,7 +185,7 @@ export default function TelegramBotPage() {
             <Send className="w-8 h-8 text-blue-400" />
             Bot Telegram
           </h1>
-          <p className="text-zinc-400">Controle suas finanças via Telegram de forma inteligente</p>
+          <p className="text-zinc-300 font-medium">Controle suas finanças via Telegram de forma inteligente</p>
         </div>
       </motion.div>
 
@@ -190,9 +195,9 @@ export default function TelegramBotPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.05 }}
-          className="bg-gradient-to-br from-green-500/10 to-green-600/10 border border-green-500/20 rounded-2xl p-6"
+          className="bg-black/20 backdrop-blur-md border border-white/10 shadow-2xl rounded-2xl p-6"
         >
-          <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+          <h3 className="text-lg font-bold drop-shadow-lg text-white mb-4 flex items-center gap-2">
             <Shield className="w-5 h-5 text-green-400" />
             Vincular Conta do Telegram
           </h3>
@@ -225,7 +230,7 @@ export default function TelegramBotPage() {
               )}
             </button>
           </div>
-          <p className="text-zinc-400 text-xs mt-3">
+          <p className="text-zinc-300 font-medium text-xs mt-3">
             💡 Dica: O código foi enviado pelo bot quando você digitou /start no Telegram
           </p>
         </motion.div>
@@ -236,18 +241,18 @@ export default function TelegramBotPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.1 }}
-        className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-sm border border-white/10 rounded-2xl p-6"
+        className="bg-black/20 backdrop-blur-md border border-white/10 shadow-2xl rounded-2xl p-6"
       >
-        <h3 className="text-lg font-semibold text-white mb-4">Informações do Bot</h3>
+        <h3 className="text-lg font-bold drop-shadow-lg text-white mb-4">Informações do Bot</h3>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="flex items-center justify-between">
-            <span className="text-zinc-400">Username:</span>
+            <span className="text-zinc-300 font-medium">Username:</span>
             <div className="flex items-center gap-2">
               <code className="bg-white/10 px-3 py-1 rounded text-blue-400 font-mono">{botUsername}</code>
               <button 
                 onClick={openTelegramBot}
-                className="text-zinc-400 hover:text-blue-400 transition-colors"
+                className="text-zinc-300 font-medium hover:text-blue-400 transition-colors"
                 title="Abrir no Telegram"
               >
                 <ExternalLink className="w-4 h-4" />
@@ -256,7 +261,7 @@ export default function TelegramBotPage() {
           </div>
           
           <div className="flex items-center justify-between">
-            <span className="text-zinc-400">Status:</span>
+            <span className="text-zinc-300 font-medium">Status:</span>
             <div className="flex items-center gap-2">
               {botActive ? (
                 <>
@@ -274,7 +279,7 @@ export default function TelegramBotPage() {
           
           {user?.telegramId && (
             <div className="flex items-center justify-between">
-              <span className="text-zinc-400">Conta Vinculada:</span>
+              <span className="text-zinc-300 font-medium">Conta Vinculada:</span>
               <div className="flex items-center gap-2">
                 <CheckCircle className="w-4 h-4 text-green-400" />
                 <span className="text-green-400">ID: {user.telegramId}</span>
@@ -289,9 +294,9 @@ export default function TelegramBotPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.2 }}
-        className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-2xl p-6"
+        className="bg-black/20 backdrop-blur-md border border-white/10 shadow-2xl rounded-2xl p-6"
       >
-        <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+        <h3 className="text-lg font-bold drop-shadow-lg text-white mb-4 flex items-center gap-2">
           <Smartphone className="w-5 h-5 text-blue-400" />
           Como Configurar o Bot
         </h3>
@@ -302,8 +307,8 @@ export default function TelegramBotPage() {
               1
             </div>
             <div>
-              <p className="text-white font-medium mb-1">Baixe o Telegram</p>
-              <p className="text-zinc-400 text-sm">
+              <p className="text-white font-bold drop-shadow-lg mb-1">Baixe o Telegram</p>
+              <p className="text-zinc-300 font-medium text-sm">
                 Se você ainda não tem o Telegram instalado, baixe agora mesmo.
               </p>
               <button
@@ -321,8 +326,8 @@ export default function TelegramBotPage() {
               2
             </div>
             <div>
-              <p className="text-white font-medium mb-1">Abra o bot no Telegram</p>
-              <p className="text-zinc-400 text-sm mb-2">
+              <p className="text-white font-bold drop-shadow-lg mb-1">Abra o bot no Telegram</p>
+              <p className="text-zinc-300 font-medium text-sm mb-2">
                 Clique no botão abaixo para abrir uma conversa com o OrbiBot.
               </p>
               <button
@@ -340,8 +345,8 @@ export default function TelegramBotPage() {
               3
             </div>
             <div>
-              <p className="text-white font-medium mb-1">Digite /start</p>
-              <p className="text-zinc-400 text-sm">
+              <p className="text-white font-bold drop-shadow-lg mb-1">Digite /start</p>
+              <p className="text-zinc-300 font-medium text-sm">
                 O bot enviará um código de vinculação. Cole esse código no campo acima para conectar sua conta.
               </p>
             </div>
@@ -354,9 +359,9 @@ export default function TelegramBotPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.3 }}
-        className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/20 rounded-2xl p-6"
+        className="bg-black/20 backdrop-blur-md border border-white/10 shadow-2xl rounded-2xl p-6"
       >
-        <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+        <h3 className="text-lg font-bold drop-shadow-lg text-white mb-4 flex items-center gap-2">
           <Sparkles className="w-5 h-5 text-purple-400" />
           Como Utilizar o Bot
         </h3>
@@ -369,9 +374,9 @@ export default function TelegramBotPage() {
           <div className="bg-white/5 rounded-xl p-4 border border-white/10">
             <div className="flex items-center gap-2 mb-2">
               <DollarSign className="w-4 h-4 text-green-400" />
-              <h4 className="text-white font-medium">Registrar Receitas</h4>
+              <h4 className="text-white font-bold drop-shadow-lg">Registrar Receitas</h4>
             </div>
-            <p className="text-zinc-400 text-sm mb-2">Exemplos:</p>
+            <p className="text-zinc-300 font-medium text-sm mb-2">Exemplos:</p>
             <ul className="text-zinc-300 text-sm space-y-1">
               <li>• &quot;recebi 1200 de salário&quot;</li>
               <li>• &quot;ganhei 500 de freelance&quot;</li>
@@ -382,9 +387,9 @@ export default function TelegramBotPage() {
           <div className="bg-white/5 rounded-xl p-4 border border-white/10">
             <div className="flex items-center gap-2 mb-2">
               <TrendingUp className="w-4 h-4 text-red-400" />
-              <h4 className="text-white font-medium">Registrar Gastos</h4>
+              <h4 className="text-white font-bold drop-shadow-lg">Registrar Gastos</h4>
             </div>
-            <p className="text-zinc-400 text-sm mb-2">Exemplos:</p>
+            <p className="text-zinc-300 font-medium text-sm mb-2">Exemplos:</p>
             <ul className="text-zinc-300 text-sm space-y-1">
               <li>• &quot;50 uber&quot;</li>
               <li>• &quot;25.90 supermercado&quot;</li>
@@ -395,9 +400,9 @@ export default function TelegramBotPage() {
           <div className="bg-white/5 rounded-xl p-4 border border-white/10">
             <div className="flex items-center gap-2 mb-2">
               <BarChart3 className="w-4 h-4 text-blue-400" />
-              <h4 className="text-white font-medium">Consultas</h4>
+              <h4 className="text-white font-bold drop-shadow-lg">Consultas</h4>
             </div>
-            <p className="text-zinc-400 text-sm mb-2">Exemplos:</p>
+            <p className="text-zinc-300 font-medium text-sm mb-2">Exemplos:</p>
             <ul className="text-zinc-300 text-sm space-y-1">
               <li>• &quot;qual meu saldo?&quot;</li>
               <li>• &quot;gastos do mês&quot;</li>
@@ -408,9 +413,9 @@ export default function TelegramBotPage() {
           <div className="bg-white/5 rounded-xl p-4 border border-white/10">
             <div className="flex items-center gap-2 mb-2">
               <Target className="w-4 h-4 text-purple-400" />
-              <h4 className="text-white font-medium">Metas e Insights</h4>
+              <h4 className="text-white font-bold drop-shadow-lg">Metas e Insights</h4>
             </div>
-            <p className="text-zinc-400 text-sm mb-2">Exemplos:</p>
+            <p className="text-zinc-300 font-medium text-sm mb-2">Exemplos:</p>
             <ul className="text-zinc-300 text-sm space-y-1">
               <li>• &quot;como estão minhas metas?&quot;</li>
               <li>• &quot;me dê uma dica&quot;</li>
@@ -425,9 +430,9 @@ export default function TelegramBotPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="bg-gradient-to-br from-orange-500/10 to-red-500/10 border border-orange-500/20 rounded-2xl p-6"
+          className="bg-black/20 backdrop-blur-md border border-white/10 shadow-2xl rounded-2xl p-6"
         >
-          <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+          <h3 className="text-lg font-bold drop-shadow-lg text-white mb-4 flex items-center gap-2">
             <Bell className="w-5 h-5 text-orange-400" />
             Alertas Automáticos
           </h3>
@@ -442,7 +447,7 @@ export default function TelegramBotPage() {
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <AlertTriangle className="w-4 h-4 text-orange-400" />
-                  <h4 className="text-white font-medium">Alerta de Gasto Alto</h4>
+                  <h4 className="text-white font-bold drop-shadow-lg">Alerta de Gasto Alto</h4>
                 </div>
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input
@@ -461,7 +466,7 @@ export default function TelegramBotPage() {
               {alertSettings.highSpendingEnabled && (
                 <div className="space-y-3 mt-3">
                   <div>
-                    <label className="text-zinc-400 text-sm mb-1 block">Valor limite (R$)</label>
+                    <label className="text-zinc-300 font-medium text-sm mb-1 block">Valor limite (R$)</label>
                     <input
                       type="number"
                       value={alertSettings.highSpendingThreshold}
@@ -475,7 +480,7 @@ export default function TelegramBotPage() {
                     />
                   </div>
                   <div>
-                    <label className="text-zinc-400 text-sm mb-1 block">Período</label>
+                    <label className="text-zinc-300 font-medium text-sm mb-1 block">Período</label>
                     <select
                       value={alertSettings.highSpendingPeriod}
                       onChange={(e) => setAlertSettings({
@@ -498,7 +503,7 @@ export default function TelegramBotPage() {
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <Clock className="w-4 h-4 text-blue-400" />
-                  <h4 className="text-white font-medium">Resumo Diário</h4>
+                  <h4 className="text-white font-bold drop-shadow-lg">Resumo Diário</h4>
                 </div>
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input
@@ -516,7 +521,7 @@ export default function TelegramBotPage() {
               
               {alertSettings.dailySummaryEnabled && (
                 <div className="mt-3">
-                  <label className="text-zinc-400 text-sm mb-1 block">Horário (HH:mm)</label>
+                  <label className="text-zinc-300 font-medium text-sm mb-1 block">Horário (HH:mm)</label>
                   <input
                     type="time"
                     value={alertSettings.dailySummaryTime || '20:00'}
@@ -550,6 +555,7 @@ export default function TelegramBotPage() {
           </button>
         </motion.div>
       )}
-    </div>
+      </div>
+    </>
   )
 }

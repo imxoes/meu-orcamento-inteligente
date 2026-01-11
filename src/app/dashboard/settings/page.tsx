@@ -27,6 +27,7 @@ import {
   CheckCircle,
   X
 } from 'lucide-react'
+import SimpleBackground from '@/components/ui/simple-background'
 
 // Emojis disponíveis para seleção
 const AVAILABLE_EMOJIS = [
@@ -266,7 +267,7 @@ export default function SettingsPage() {
           {/* Emoji Picker */}
           {showEmojiPicker && (
             <div className="absolute top-24 left-0 z-50 p-4 bg-zinc-900 border border-white/20 rounded-2xl shadow-2xl min-w-[320px]">
-              <p className="text-zinc-400 text-sm mb-3">Escolha um emoji:</p>
+              <p className="text-zinc-300 font-medium text-sm mb-3">Escolha um emoji:</p>
               <div className="grid grid-cols-8 gap-1" style={{ gridTemplateColumns: 'repeat(8, 36px)' }}>
                 {AVAILABLE_EMOJIS.map((emoji, index) => (
                   <button
@@ -288,14 +289,14 @@ export default function SettingsPage() {
           )}
         </div>
         <div className="flex-1">
-          <h3 className="text-xl font-semibold text-white mb-2">Avatar do Perfil</h3>
-          <p className="text-zinc-400 text-sm">Clique no emoji para trocar</p>
+          <h3 className="text-xl font-bold drop-shadow-lg text-white mb-2">Avatar do Perfil</h3>
+          <p className="text-zinc-300 font-medium text-sm">Clique no emoji para trocar</p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="block text-zinc-400 text-sm font-medium mb-2">Nome Completo</label>
+          <label className="block text-zinc-300 font-medium text-sm font-medium mb-2">Nome Completo</label>
           <input
             type="text"
             value={profileData.name}
@@ -306,17 +307,17 @@ export default function SettingsPage() {
         </div>
 
         <div>
-          <label className="block text-zinc-400 text-sm font-medium mb-2">Email</label>
+          <label className="block text-zinc-300 font-medium text-sm font-medium mb-2">Email</label>
           <input
             type="email"
             value={user?.email || ''}
             disabled
-            className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-zinc-400 cursor-not-allowed"
+            className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-zinc-300 font-medium cursor-not-allowed"
           />
         </div>
 
         <div>
-          <label className="block text-zinc-400 text-sm font-medium mb-2">Telegram ID</label>
+          <label className="block text-zinc-300 font-medium text-sm font-medium mb-2">Telegram ID</label>
           <input
             type="text"
             value={profileData.telegramId}
@@ -327,7 +328,7 @@ export default function SettingsPage() {
         </div>
 
         <div>
-          <label className="block text-zinc-400 text-sm font-medium mb-2">Moeda Padrão</label>
+          <label className="block text-zinc-300 font-medium text-sm font-medium mb-2">Moeda Padrão</label>
           <select className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:border-blue-500/50">
             <option value="BRL">Real (R$)</option>
             <option value="USD">Dólar (US$)</option>
@@ -371,14 +372,14 @@ export default function SettingsPage() {
       <div className="bg-white/5 rounded-xl p-6">
         <div className="flex items-center gap-3 mb-4">
           <AlertTriangle className="w-5 h-5 text-orange-400" />
-          <h3 className="text-lg font-semibold text-white">Alertas de Gastos</h3>
+          <h3 className="text-lg font-bold drop-shadow-lg text-white">Alertas de Gastos</h3>
         </div>
         
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-white font-medium">Ativar alertas de gastos</p>
-              <p className="text-zinc-400 text-sm">Receba avisos quando exceder o limite</p>
+              <p className="text-white font-bold drop-shadow-lg">Ativar alertas de gastos</p>
+              <p className="text-zinc-300 font-medium text-sm">Receba avisos quando exceder o limite</p>
             </div>
             <button
               onClick={() => setUserSettings(prev => ({ ...prev, spendingAlertsEnabled: !prev.spendingAlertsEnabled }))}
@@ -395,7 +396,7 @@ export default function SettingsPage() {
           {userSettings.spendingAlertsEnabled && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-white/10">
               <div>
-                <label className="block text-zinc-400 text-sm font-medium mb-2">Limite de gasto (R$)</label>
+                <label className="block text-zinc-300 font-medium text-sm font-medium mb-2">Limite de gasto (R$)</label>
                 <input
                   type="number"
                   value={userSettings.spendingAlertLimit}
@@ -405,7 +406,7 @@ export default function SettingsPage() {
                 />
               </div>
               <div>
-                <label className="block text-zinc-400 text-sm font-medium mb-2">Período de análise</label>
+                <label className="block text-zinc-300 font-medium text-sm font-medium mb-2">Período de análise</label>
                 <select
                   value={userSettings.spendingAlertPeriod}
                   onChange={(e) => setUserSettings(prev => ({ ...prev, spendingAlertPeriod: e.target.value }))}
@@ -425,14 +426,14 @@ export default function SettingsPage() {
       <div className="bg-white/5 rounded-xl p-6">
         <div className="flex items-center gap-3 mb-4">
           <Target className="w-5 h-5 text-blue-400" />
-          <h3 className="text-lg font-semibold text-white">Alertas de Metas</h3>
+          <h3 className="text-lg font-bold drop-shadow-lg text-white">Alertas de Metas</h3>
         </div>
         
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-white font-medium">Notificar progresso de metas</p>
-              <p className="text-zinc-400 text-sm">Receba avisos sobre suas metas financeiras</p>
+              <p className="text-white font-bold drop-shadow-lg">Notificar progresso de metas</p>
+              <p className="text-zinc-300 font-medium text-sm">Receba avisos sobre suas metas financeiras</p>
             </div>
             <button
               onClick={() => setUserSettings(prev => ({ ...prev, goalAlertsEnabled: !prev.goalAlertsEnabled }))}
@@ -448,7 +449,7 @@ export default function SettingsPage() {
 
           {userSettings.goalAlertsEnabled && (
             <div className="pt-4 border-t border-white/10">
-              <label className="block text-zinc-400 text-sm font-medium mb-2">
+              <label className="block text-zinc-300 font-medium text-sm font-medium mb-2">
                 Notificar quando atingir (%)
               </label>
               <div className="flex items-center gap-4">
@@ -461,7 +462,7 @@ export default function SettingsPage() {
                   onChange={(e) => setUserSettings(prev => ({ ...prev, goalAlertThreshold: Number(e.target.value) }))}
                   className="flex-1 h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-blue-500"
                 />
-                <span className="text-white font-medium w-16 text-right">{userSettings.goalAlertThreshold}%</span>
+                <span className="text-white font-bold drop-shadow-lg w-16 text-right">{userSettings.goalAlertThreshold}%</span>
               </div>
               <p className="text-zinc-500 text-xs mt-2">
                 Você será notificado quando suas metas atingirem {userSettings.goalAlertThreshold}% do valor total
@@ -475,14 +476,14 @@ export default function SettingsPage() {
       <div className="bg-white/5 rounded-xl p-6">
         <div className="flex items-center gap-3 mb-4">
           <Wallet className="w-5 h-5 text-red-400" />
-          <h3 className="text-lg font-semibold text-white">Alerta de Saldo Baixo</h3>
+          <h3 className="text-lg font-bold drop-shadow-lg text-white">Alerta de Saldo Baixo</h3>
         </div>
         
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-white font-medium">Ativar alerta de saldo baixo</p>
-              <p className="text-zinc-400 text-sm">Receba avisos quando seu saldo estiver baixo</p>
+              <p className="text-white font-bold drop-shadow-lg">Ativar alerta de saldo baixo</p>
+              <p className="text-zinc-300 font-medium text-sm">Receba avisos quando seu saldo estiver baixo</p>
             </div>
             <button
               onClick={() => setUserSettings(prev => ({ ...prev, lowBalanceAlertEnabled: !prev.lowBalanceAlertEnabled }))}
@@ -498,7 +499,7 @@ export default function SettingsPage() {
 
           {userSettings.lowBalanceAlertEnabled && (
             <div className="pt-4 border-t border-white/10">
-              <label className="block text-zinc-400 text-sm font-medium mb-2">Saldo mínimo (R$)</label>
+              <label className="block text-zinc-300 font-medium text-sm font-medium mb-2">Saldo mínimo (R$)</label>
               <input
                 type="number"
                 value={userSettings.lowBalanceThreshold}
@@ -515,7 +516,7 @@ export default function SettingsPage() {
       <div className="bg-white/5 rounded-xl p-6">
         <div className="flex items-center gap-3 mb-4">
           <Bell className="w-5 h-5 text-purple-400" />
-          <h3 className="text-lg font-semibold text-white">Como Receber os Alertas</h3>
+          <h3 className="text-lg font-bold drop-shadow-lg text-white">Como Receber os Alertas</h3>
         </div>
         
         <div className="space-y-3">
@@ -534,8 +535,8 @@ export default function SettingsPage() {
               }`}
             >
               <div className="text-left">
-                <p className="text-white font-medium">{option.label}</p>
-                <p className="text-zinc-400 text-sm">{option.desc}</p>
+                <p className="text-white font-bold drop-shadow-lg">{option.label}</p>
+                <p className="text-zinc-300 font-medium text-sm">{option.desc}</p>
               </div>
               {userSettings.alertDeliveryMethod === option.value && (
                 <CheckCircle className="w-5 h-5 text-purple-400" />
@@ -547,7 +548,7 @@ export default function SettingsPage() {
         {(userSettings.alertDeliveryMethod === 'EMAIL' || userSettings.alertDeliveryMethod === 'BOTH') && (
           <div className="mt-4 pt-4 border-t border-white/10 space-y-4">
             <div>
-              <label className="block text-zinc-400 text-sm font-medium mb-2">Frequência de email</label>
+              <label className="block text-zinc-300 font-medium text-sm font-medium mb-2">Frequência de email</label>
               <select
                 value={userSettings.emailFrequency}
                 onChange={(e) => setUserSettings(prev => ({ ...prev, emailFrequency: e.target.value }))}
@@ -561,7 +562,7 @@ export default function SettingsPage() {
 
             {userSettings.emailFrequency !== 'INSTANT' && (
               <div>
-                <label className="block text-zinc-400 text-sm font-medium mb-2">Horário de envio</label>
+                <label className="block text-zinc-300 font-medium text-sm font-medium mb-2">Horário de envio</label>
                 <input
                   type="time"
                   value={userSettings.emailTime}
@@ -618,14 +619,14 @@ export default function SettingsPage() {
       <div className="bg-white/5 rounded-xl p-6">
         <div className="flex items-center gap-3 mb-4">
           <Calendar className="w-5 h-5 text-blue-400" />
-          <h3 className="text-lg font-semibold text-white">Relatório Semanal</h3>
+          <h3 className="text-lg font-bold drop-shadow-lg text-white">Relatório Semanal</h3>
         </div>
         
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-white font-medium">Receber relatório semanal</p>
-              <p className="text-zinc-400 text-sm">Resumo das suas finanças da semana</p>
+              <p className="text-white font-bold drop-shadow-lg">Receber relatório semanal</p>
+              <p className="text-zinc-300 font-medium text-sm">Resumo das suas finanças da semana</p>
             </div>
             <button
               onClick={() => setUserSettings(prev => ({ ...prev, weeklyReportEnabled: !prev.weeklyReportEnabled }))}
@@ -642,7 +643,7 @@ export default function SettingsPage() {
           {userSettings.weeklyReportEnabled && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-white/10">
               <div>
-                <label className="block text-zinc-400 text-sm font-medium mb-2">Dia de envio</label>
+                <label className="block text-zinc-300 font-medium text-sm font-medium mb-2">Dia de envio</label>
                 <select
                   value={userSettings.weeklyReportDay}
                   onChange={(e) => setUserSettings(prev => ({ ...prev, weeklyReportDay: e.target.value }))}
@@ -658,7 +659,7 @@ export default function SettingsPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-zinc-400 text-sm font-medium mb-2">Conteúdo do relatório</label>
+                <label className="block text-zinc-300 font-medium text-sm font-medium mb-2">Conteúdo do relatório</label>
                 <select
                   value={userSettings.weeklyReportContent}
                   onChange={(e) => setUserSettings(prev => ({ ...prev, weeklyReportContent: e.target.value }))}
@@ -679,14 +680,14 @@ export default function SettingsPage() {
       <div className="bg-white/5 rounded-xl p-6">
         <div className="flex items-center gap-3 mb-4">
           <FileText className="w-5 h-5 text-purple-400" />
-          <h3 className="text-lg font-semibold text-white">Relatório Mensal</h3>
+          <h3 className="text-lg font-bold drop-shadow-lg text-white">Relatório Mensal</h3>
         </div>
         
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-white font-medium">Receber relatório mensal</p>
-              <p className="text-zinc-400 text-sm">Análise completa do mês</p>
+              <p className="text-white font-bold drop-shadow-lg">Receber relatório mensal</p>
+              <p className="text-zinc-300 font-medium text-sm">Análise completa do mês</p>
             </div>
             <button
               onClick={() => setUserSettings(prev => ({ ...prev, monthlyReportEnabled: !prev.monthlyReportEnabled }))}
@@ -703,7 +704,7 @@ export default function SettingsPage() {
           {userSettings.monthlyReportEnabled && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-white/10">
               <div>
-                <label className="block text-zinc-400 text-sm font-medium mb-2">Dia do mês para envio</label>
+                <label className="block text-zinc-300 font-medium text-sm font-medium mb-2">Dia do mês para envio</label>
                 <select
                   value={userSettings.monthlyReportDay}
                   onChange={(e) => setUserSettings(prev => ({ ...prev, monthlyReportDay: Number(e.target.value) }))}
@@ -715,7 +716,7 @@ export default function SettingsPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-zinc-400 text-sm font-medium mb-2">Conteúdo do relatório</label>
+                <label className="block text-zinc-300 font-medium text-sm font-medium mb-2">Conteúdo do relatório</label>
                 <select
                   value={userSettings.monthlyReportContent}
                   onChange={(e) => setUserSettings(prev => ({ ...prev, monthlyReportContent: e.target.value }))}
@@ -735,7 +736,7 @@ export default function SettingsPage() {
       <div className="bg-white/5 rounded-xl p-6">
         <div className="flex items-center gap-3 mb-4">
           <CheckCircle className="w-5 h-5 text-green-400" />
-          <h3 className="text-lg font-semibold text-white">Como Receber os Relatórios</h3>
+          <h3 className="text-lg font-bold drop-shadow-lg text-white">Como Receber os Relatórios</h3>
         </div>
         
         <div className="space-y-3">
@@ -754,8 +755,8 @@ export default function SettingsPage() {
               }`}
             >
               <div className="text-left">
-                <p className="text-white font-medium">{option.label}</p>
-                <p className="text-zinc-400 text-sm">{option.desc}</p>
+                <p className="text-white font-bold drop-shadow-lg">{option.label}</p>
+                <p className="text-zinc-300 font-medium text-sm">{option.desc}</p>
               </div>
               {userSettings.reportDeliveryMethod === option.value && (
                 <CheckCircle className="w-5 h-5 text-blue-400" />
@@ -797,11 +798,11 @@ export default function SettingsPage() {
       )}
 
       <div className="bg-white/5 rounded-xl p-6">
-        <h3 className="text-lg font-semibold text-white mb-4">Alterar Senha</h3>
+        <h3 className="text-lg font-bold drop-shadow-lg text-white mb-4">Alterar Senha</h3>
         
         <div className="space-y-4">
           <div>
-            <label className="block text-zinc-400 text-sm font-medium mb-2">Senha Atual</label>
+            <label className="block text-zinc-300 font-medium text-sm font-medium mb-2">Senha Atual</label>
             <div className="relative">
               <input
                 type={showPassword ? 'text' : 'password'}
@@ -813,7 +814,7 @@ export default function SettingsPage() {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-zinc-400 hover:text-white"
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-zinc-300 font-medium hover:text-white"
               >
                 {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
               </button>
@@ -821,7 +822,7 @@ export default function SettingsPage() {
           </div>
 
           <div>
-            <label className="block text-zinc-400 text-sm font-medium mb-2">Nova Senha</label>
+            <label className="block text-zinc-300 font-medium text-sm font-medium mb-2">Nova Senha</label>
             <input
               type="password"
               value={passwordData.newPassword}
@@ -832,7 +833,7 @@ export default function SettingsPage() {
           </div>
 
           <div>
-            <label className="block text-zinc-400 text-sm font-medium mb-2">Confirmar Nova Senha</label>
+            <label className="block text-zinc-300 font-medium text-sm font-medium mb-2">Confirmar Nova Senha</label>
             <input
               type="password"
               value={passwordData.confirmPassword}
@@ -858,12 +859,12 @@ export default function SettingsPage() {
       </div>
 
       <div className="bg-white/5 rounded-xl p-6">
-        <h3 className="text-lg font-semibold text-white mb-4">Sessões Ativas</h3>
+        <h3 className="text-lg font-bold drop-shadow-lg text-white mb-4">Sessões Ativas</h3>
         <div className="space-y-3">
           <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
             <div>
-              <p className="text-white font-medium">Sessão Atual</p>
-              <p className="text-zinc-400 text-sm">Este dispositivo • Agora</p>
+              <p className="text-white font-bold drop-shadow-lg">Sessão Atual</p>
+              <p className="text-zinc-300 font-medium text-sm">Este dispositivo • Agora</p>
             </div>
             <span className="text-green-400 text-sm">Ativa</span>
           </div>
@@ -875,20 +876,20 @@ export default function SettingsPage() {
   const renderAppearanceSection = () => (
     <div className="space-y-6">
       <div className="bg-white/5 rounded-xl p-6">
-        <h3 className="text-lg font-semibold text-white mb-4">Idioma</h3>
+        <h3 className="text-lg font-bold drop-shadow-lg text-white mb-4">Idioma</h3>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Globe className="w-5 h-5 text-green-400" />
             <div>
-              <p className="text-white font-medium">Português (Brasil)</p>
-              <p className="text-zinc-400 text-sm">Idioma da interface</p>
+              <p className="text-white font-bold drop-shadow-lg">Português (Brasil)</p>
+              <p className="text-zinc-300 font-medium text-sm">Idioma da interface</p>
             </div>
           </div>
         </div>
       </div>
 
       <div className="bg-white/5 rounded-xl p-6">
-        <h3 className="text-lg font-semibold text-white mb-4">Formato de Data</h3>
+        <h3 className="text-lg font-bold drop-shadow-lg text-white mb-4">Formato de Data</h3>
         <select className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:border-blue-500/50">
           <option value="dd/mm/yyyy">DD/MM/AAAA</option>
           <option value="mm/dd/yyyy">MM/DD/AAAA</option>
@@ -1013,13 +1014,13 @@ export default function SettingsPage() {
       )}
 
       <div className="bg-white/5 rounded-xl p-6">
-        <h3 className="text-lg font-semibold text-white mb-4">Backup e Restauração</h3>
+        <h3 className="text-lg font-bold drop-shadow-lg text-white mb-4">Backup e Restauração</h3>
         
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-white font-medium">Exportar Dados</p>
-              <p className="text-zinc-400 text-sm">Baixe todos os seus dados em formato JSON</p>
+              <p className="text-white font-bold drop-shadow-lg">Exportar Dados</p>
+              <p className="text-zinc-300 font-medium text-sm">Baixe todos os seus dados em formato JSON</p>
             </div>
             <button 
               onClick={handleExportData}
@@ -1037,8 +1038,8 @@ export default function SettingsPage() {
           
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-white font-medium">Importar Dados</p>
-              <p className="text-zinc-400 text-sm">Restaure dados de um backup anterior</p>
+              <p className="text-white font-bold drop-shadow-lg">Importar Dados</p>
+              <p className="text-zinc-300 font-medium text-sm">Restaure dados de um backup anterior</p>
             </div>
             <label className="flex items-center gap-2 px-4 py-2 bg-green-500/20 text-green-400 rounded-lg hover:bg-green-500/30 transition-colors cursor-pointer">
               {isImporting ? (
@@ -1064,8 +1065,8 @@ export default function SettingsPage() {
         
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-white font-medium">Excluir Conta</p>
-            <p className="text-zinc-400 text-sm">Remove permanentemente todos os seus dados</p>
+            <p className="text-white font-bold drop-shadow-lg">Excluir Conta</p>
+            <p className="text-zinc-300 font-medium text-sm">Remove permanentemente todos os seus dados</p>
           </div>
           <button 
             onClick={() => setShowDeleteModal(true)}
@@ -1090,7 +1091,7 @@ export default function SettingsPage() {
                   setDeletePassword('')
                   setError('')
                 }}
-                className="text-zinc-400 hover:text-white"
+                className="text-zinc-300 font-medium hover:text-white"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -1110,7 +1111,7 @@ export default function SettingsPage() {
               </div>
 
               <div>
-                <label className="block text-zinc-400 text-sm font-medium mb-2">
+                <label className="block text-zinc-300 font-medium text-sm font-medium mb-2">
                   Digite <span className="text-red-400 font-bold">EXCLUIR MINHA CONTA</span> para confirmar:
                 </label>
                 <input
@@ -1123,7 +1124,7 @@ export default function SettingsPage() {
               </div>
 
               <div>
-                <label className="block text-zinc-400 text-sm font-medium mb-2">
+                <label className="block text-zinc-300 font-medium text-sm font-medium mb-2">
                   Digite sua senha:
                 </label>
                 <input
@@ -1181,7 +1182,11 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <>
+      <div className="fixed inset-0" style={{ zIndex: -1 }}>
+        <SimpleBackground />
+      </div>
+      <div className="min-h-screen relative space-y-6 p-6">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -1189,10 +1194,10 @@ export default function SettingsPage() {
         transition={{ duration: 0.6 }}
       >
         <h1 className="text-2xl font-bold text-white flex items-center gap-3">
-          <Settings className="w-8 h-8 text-zinc-400" />
+          <Settings className="w-8 h-8 text-zinc-300 font-medium" />
           Configurações
         </h1>
-        <p className="text-zinc-400">Gerencie suas preferências e configurações da conta</p>
+        <p className="text-zinc-300 font-medium">Gerencie suas preferências e configurações da conta</p>
       </motion.div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
@@ -1203,7 +1208,7 @@ export default function SettingsPage() {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="lg:col-span-1"
         >
-          <div className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-sm border border-white/10 rounded-2xl p-4">
+          <div className="bg-black/20 backdrop-blur-md border border-white/10 shadow-2xl rounded-2xl p-4">
             <nav className="space-y-2">
               {sections.map((section) => {
                 const Icon = section.icon
@@ -1218,7 +1223,7 @@ export default function SettingsPage() {
                     className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-colors text-left ${
                       activeSection === section.id
                         ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
-                        : 'text-zinc-400 hover:text-white hover:bg-white/5'
+                        : 'text-zinc-300 font-medium hover:text-white hover:bg-white/5'
                     }`}
                   >
                     <Icon className="w-5 h-5" />
@@ -1237,8 +1242,8 @@ export default function SettingsPage() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="lg:col-span-3"
         >
-          <div className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
-            <h2 className="text-xl font-semibold text-white mb-6">
+          <div className="bg-black/20 backdrop-blur-md border border-white/10 shadow-2xl rounded-2xl p-6">
+            <h2 className="text-xl font-bold drop-shadow-lg text-white mb-6">
               {sections.find(s => s.id === activeSection)?.name}
             </h2>
             {loadingSettings ? (
@@ -1252,5 +1257,6 @@ export default function SettingsPage() {
         </motion.div>
       </div>
     </div>
+    </>
   )
 }

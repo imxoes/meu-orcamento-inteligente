@@ -203,9 +203,9 @@ export default function Dashboard() {
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="bg-black/20 backdrop-blur-md border border-white/10 rounded-lg shadow-2xl"
+          className="bg-black/20 backdrop-blur-md border border-white/10 rounded-lg shadow-2xl h-[500px] flex flex-col"
         >
-          <div className="p-6 border-b border-white/10">
+          <div className="p-6 border-b border-white/10 flex-shrink-0">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-bold text-white drop-shadow-lg">Transações Recentes</h2>
               <Link
@@ -217,7 +217,7 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <div className="p-6">
+          <div className="flex-1 overflow-hidden p-6">
             {loading ? (
               <div className="text-center py-8">
                 <p className="text-zinc-300">Carregando...</p>
@@ -233,26 +233,26 @@ export default function Dashboard() {
                 </Link>
               </div>
             ) : (
-              <div className="space-y-4">
-                {transactions.map((transaction) => (
+              <div className="space-y-3 overflow-y-auto h-full pr-2 custom-scrollbar">
+                {transactions.slice(0, 10).map((transaction) => (
                   <div key={transaction.id} className="flex items-center justify-between p-3 bg-black/10 backdrop-blur-sm rounded-lg border border-white/5">
-                    <div className="flex items-center gap-3">
-                      <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
                         transaction.type === 'INCOME' ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
                       }`}>
                         {transaction.type === 'INCOME' ? (
-                          <TrendingUp className="w-5 h-5" />
+                          <TrendingUp className="w-4 h-4" />
                         ) : (
-                          <TrendingDown className="w-5 h-5" />
+                          <TrendingDown className="w-4 h-4" />
                         )}
                       </div>
-                      <div>
-                        <p className="text-white font-medium">{transaction.description}</p>
-                        <p className="text-zinc-400 text-sm">{transaction.category.name}</p>
+                      <div className="min-w-0">
+                        <p className="text-white font-medium text-sm truncate">{transaction.description}</p>
+                        <p className="text-zinc-400 text-xs">{transaction.category.name}</p>
                       </div>
                     </div>
-                    <div className="text-right">
-                      <p className={`font-semibold ${
+                    <div className="text-right flex-shrink-0">
+                      <p className={`font-semibold text-sm ${
                         transaction.type === 'INCOME' ? 'text-green-400' : 'text-red-400'
                       }`}>
                         {transaction.type === 'INCOME' ? '+' : '-'}{formatCurrency(transaction.amount, showValues)}
@@ -273,9 +273,9 @@ export default function Dashboard() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.25 }}
-          className="bg-black/20 backdrop-blur-md border border-white/10 rounded-lg shadow-2xl"
+          className="bg-black/20 backdrop-blur-md border border-white/10 rounded-lg shadow-2xl h-[500px] flex flex-col"
         >
-          <div className="p-6 border-b border-white/10">
+          <div className="p-6 border-b border-white/10 flex-shrink-0">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-bold text-white drop-shadow-lg">Top 5 Categorias</h2>
               <Link
@@ -287,7 +287,7 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <div className="p-6">
+          <div className="flex-1 overflow-hidden p-6">
             {loading ? (
               <div className="text-center py-8">
                 <p className="text-zinc-300">Carregando...</p>
@@ -365,9 +365,9 @@ export default function Dashboard() {
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="bg-black/20 backdrop-blur-md border border-white/10 rounded-lg shadow-2xl"
+          className="bg-black/20 backdrop-blur-md border border-white/10 rounded-lg shadow-2xl h-[500px] flex flex-col"
         >
-          <div className="p-6 border-b border-white/10">
+          <div className="p-6 border-b border-white/10 flex-shrink-0">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-bold text-white drop-shadow-lg">Metas Financeiras</h2>
               <Link
@@ -379,7 +379,7 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <div className="p-6">
+          <div className="flex-1 overflow-hidden p-6">
             {loading ? (
               <div className="text-center py-8">
                 <p className="text-zinc-300">Carregando...</p>
@@ -395,8 +395,8 @@ export default function Dashboard() {
                 </Link>
               </div>
             ) : (
-              <div className="space-y-4">
-                {goals.slice(0, 3).map((goal) => {
+              <div className="space-y-3 overflow-y-auto h-full pr-2 custom-scrollbar">
+                {goals.slice(0, 5).map((goal) => {
                   const progress = goal.targetAmount > 0 ? (goal.currentAmount / goal.targetAmount) * 100 : 0
                   return (
                     <div key={goal.id} className="bg-black/10 backdrop-blur-sm rounded-lg p-4 border border-white/5">
@@ -421,12 +421,12 @@ export default function Dashboard() {
                     </div>
                   )
                 })}
-                {goals.length > 3 && (
+                {goals.length > 5 && (
                   <Link
                     href="/dashboard/goals"
                     className="block text-center text-sm text-blue-400 hover:text-purple-400 transition-colors pt-2"
                   >
-                    Ver mais {goals.length - 3} meta{goals.length - 3 > 1 ? 's' : ''}
+                    Ver mais {goals.length - 5} meta{goals.length - 5 > 1 ? 's' : ''}
                   </Link>
                 )}
               </div>

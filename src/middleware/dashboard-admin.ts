@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken'
+import { getToken } from 'next-auth/jwt'
 import { prisma } from '@/lib/prisma'
 
 export interface AdminUser {
@@ -8,40 +8,23 @@ export interface AdminUser {
   role: string
 }
 
-// Função para verificar se o usuário é admin usando o token normal do sistema
+// Função para verificar se o usuário é admin usando NextAuth
 export async function verifyDashboardAdminAuth(request: Request): Promise<AdminUser | null> {
   try {
-    // Extrair token do cookie normal do sistema
-    const cookies = request.headers.get('cookie')
-    let token: string | null = null
+    // Usar NextAuth para verificar o token
+    const token = await getToken({
+      req: request as any,
+      secret: process.env.NEXTAUTH_SECRET
+    })
 
-    if (cookies) {
-      // Tentar token normal primeiro
-      const tokenMatch = cookies.match(/token=([^;]+)/)
-      if (tokenMatch) {
-        token = tokenMatch[1]
-      }
-    }
-
-    // Tentar extrair do header Authorization como fallback
-    if (!token) {
-      const authHeader = request.headers.get('authorization')
-      if (authHeader && authHeader.startsWith('Bearer ')) {
-        token = authHeader.substring(7)
-      }
-    }
-
-    if (!token) {
+    if (!token?.id) {
       return null
     }
-
-    // Verificar token JWT
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as any
 
     // Buscar usuário no banco e verificar se é admin
     const user = await prisma.user.findUnique({
       where: {
-        id: decoded.userId,
+        id: token.id as string,
         role: 'ADMIN', // Verificar se é admin
         isActive: true,
         isBlocked: false

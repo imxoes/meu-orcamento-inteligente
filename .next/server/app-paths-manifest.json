@@ -1,12 +1,1 @@
-{
-  "/api/auth/login/route": "app/api/auth/login/route.js",
-  "/favicon.ico/route": "app/favicon.ico/route.js",
-  "/api/user/profile/route": "app/api/user/profile/route.js",
-  "/api/dashboard/stats/route": "app/api/dashboard/stats/route.js",
-  "/api/transactions/route": "app/api/transactions/route.js",
-  "/api/investments/route": "app/api/investments/route.js",
-  "/api/goals/route": "app/api/goals/route.js",
-  "/page": "app/page.js",
-  "/auth/login/page": "app/auth/login/page.js",
-  "/dashboard/page": "app/dashboard/page.js"
-}
+{}

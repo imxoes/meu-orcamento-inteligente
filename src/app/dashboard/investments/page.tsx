@@ -26,7 +26,7 @@ export default function InvestmentsPage() {
   const [investments, setInvestments] = useState<Investment[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const { showValues } = useValuesVisibility()
+  const { showValues, currency } = useValuesVisibility()
 
   const [showAddForm, setShowAddForm] = useState(false)
   const [newInvestmentTitle, setNewInvestmentTitle] = useState('')
@@ -281,7 +281,7 @@ export default function InvestmentsPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-zinc-300 font-medium text-sm">Total Investido</p>
-                <p className="text-white text-2xl font-bold drop-shadow-lg mt-1">{formatCurrency(totalInvested, showValues)}</p>
+                <p className="text-white text-2xl font-bold drop-shadow-lg mt-1">{formatCurrency(totalInvested, showValues, currency)}</p>
               </div>
               <TrendingUp className="w-8 h-8 text-blue-400" />
             </div>
@@ -356,7 +356,7 @@ export default function InvestmentsPage() {
                 <div className="space-y-3 mb-4">
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-zinc-300 font-medium">Valor Investido</span>
-                    <span className="text-white text-2xl font-bold">{formatCurrency(investment.currentAmount, showValues)}</span>
+                    <span className="text-white text-2xl font-bold">{formatCurrency(investment.currentAmount, showValues, currency)}</span>
                   </div>
                 </div>
 
@@ -488,7 +488,7 @@ export default function InvestmentsPage() {
             <div className="mb-4 p-4 bg-white/5 rounded-xl">
               <div className="flex items-center justify-between">
                 <span className="text-zinc-400 text-sm">Valor Atual</span>
-                <span className="text-white font-semibold">{formatCurrency(selectedInvestment.currentAmount, showValues)}</span>
+                <span className="text-white font-semibold">{formatCurrency(selectedInvestment.currentAmount, showValues, currency)}</span>
               </div>
             </div>
 

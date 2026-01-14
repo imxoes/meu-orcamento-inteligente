@@ -48,7 +48,7 @@ export default function ExpensesPage() {
   const [transactions, setTransactions] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [isExporting, setIsExporting] = useState(false)
-  const { showValues } = useValuesVisibility()
+  const { showValues, currency } = useValuesVisibility()
 
   useEffect(() => {
     const fetchTransactions = async () => {
@@ -243,7 +243,7 @@ export default function ExpensesPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-zinc-300 font-medium text-sm">Gastos do Mês</p>
-                <p className="text-white text-2xl font-bold drop-shadow-lg mt-1">{formatCurrency(currentMonthExpenses, showValues)}</p>
+                <p className="text-white text-2xl font-bold drop-shadow-lg mt-1">{formatCurrency(currentMonthExpenses, showValues, currency)}</p>
                 <div className="flex items-center mt-2">
                   <TrendingDown className={`w-4 h-4 ${monthlyChange > 0 ? 'text-purple-400' : 'text-blue-400'}`} />
                   <span className={`text-sm font-medium ml-1 ${monthlyChange > 0 ? 'text-purple-400' : 'text-blue-400'}`}>
@@ -260,7 +260,7 @@ export default function ExpensesPage() {
               <div>
                 <p className="text-zinc-300 font-medium text-sm">Média Mensal</p>
                 <p className="text-white text-2xl font-bold drop-shadow-lg mt-1">
-                  {formatCurrency(monthlyExpensesData.reduce((sum, m) => sum + m.value, 0) / Math.max(monthlyExpensesData.length, 1), showValues)}
+                  {formatCurrency(monthlyExpensesData.reduce((sum, m) => sum + m.value, 0) / Math.max(monthlyExpensesData.length, 1), showValues, currency)}
                 </p>
               </div>
               <Calendar className="w-8 h-8 text-purple-400" />
@@ -272,7 +272,7 @@ export default function ExpensesPage() {
               <div>
                 <p className="text-zinc-300 font-medium text-sm">Total do Ano</p>
                 <p className="text-white text-2xl font-bold drop-shadow-lg mt-1">
-                  {formatCurrency(monthlyExpensesData.reduce((sum, m) => sum + m.value, 0), showValues)}
+                  {formatCurrency(monthlyExpensesData.reduce((sum, m) => sum + m.value, 0), showValues, currency)}
                 </p>
               </div>
               <CreditCard className="w-8 h-8 text-blue-400" />
@@ -450,7 +450,7 @@ export default function ExpensesPage() {
                   <div className="space-y-2">
                     <div className="flex justify-between items-center">
                       <span className="text-sm text-zinc-300 font-medium">Valor</span>
-                      <span className="text-white font-semibold">{formatCurrency(category.value, showValues)}</span>
+                      <span className="text-white font-semibold">{formatCurrency(category.value, showValues, currency)}</span>
                     </div>
 
                     <div className="w-full bg-white/10 rounded-full h-2">

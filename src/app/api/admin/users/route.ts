@@ -1,57 +1,129 @@
-/**
- * API para listar todos os usuários (apenas admin)
- */
-
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
+import { requireAdminAuth } from '@/middleware/admin'
 import { prisma } from '@/lib/prisma'
-import { getUserIdFromToken } from '@/lib/auth-utils'
-import { requireAdmin } from '@/lib/admin-utils'
 
-export async function GET(request: NextRequest) {
+export async function GET(request: Request) {
   try {
-    const userId = await getUserIdFromToken(request)
-    if (!userId) {
-      return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
+    await requireAdminAuth(request)
+
+    const url = new URL(request.url)
+    const page = parseInt(url.searchParams.get('page') || '1')
+    const limit = parseInt(url.searchParams.get('limit') || '20')
+    const search = url.searchParams.get('search') || ''
+    const status = url.searchParams.get('status') || 'all' // all, active, blocked, vip
+    const sortBy = url.searchParams.get('sortBy') || 'createdAt'
+    const sortOrder = url.searchParams.get('sortOrder') || 'desc'
+
+    const skip = (page - 1) * limit
+
+    // Construir filtros
+    const where: any = {
+      role: 'USER' // Não mostrar outros admins
     }
 
-    await requireAdmin(userId)
+    if (search) {
+      where.OR = [
+        { name: { contains: search, mode: 'insensitive' } },
+        { email: { contains: search, mode: 'insensitive' } }
+      ]
+    }
 
-    const users = await prisma.user.findMany({
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        isActive: true,
-        subscriptionStatus: true,
-        subscriptionPlan: true,
-        trialEndsAt: true,
-        createdAt: true,
-        lastLoginAt: true,
-        emailVerified: true,
-        _count: {
-          select: {
-            transactions: true,
-            goals: true,
-            investments: true
+    if (status === 'active') {
+      where.isActive = true
+      where.isBlocked = false
+    } else if (status === 'blocked') {
+      where.isBlocked = true
+    } else if (status === 'vip') {
+      where.subscriptionPlan = { in: ['BASIC', 'PREMIUM'] }
+    }
+
+    // Buscar usuários
+    const [users, totalCount] = await Promise.all([
+      prisma.user.findMany({
+        where,
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          isActive: true,
+          isBlocked: true,
+          blockedAt: true,
+          blockedBy: true,
+          blockedReason: true,
+          subscriptionPlan: true,
+          subscriptionStatus: true,
+          lastLoginAt: true,
+          createdAt: true,
+          provider: true,
+          _count: {
+            select: {
+              transactions: true,
+              goals: true,
+              investments: true
+            }
           }
-        }
-      },
-      orderBy: { createdAt: 'desc' }
+        },
+        orderBy: {
+          [sortBy]: sortOrder
+        },
+        skip,
+        take: limit
+      }),
+      prisma.user.count({ where })
+    ])
+
+    // Calcular estatísticas
+    const stats = await prisma.user.aggregate({
+      where: { role: 'USER' },
+      _count: {
+        id: true
+      }
     })
 
-    // Add role field if it exists, otherwise default to 'USER'
-    const usersWithRole = users.map(user => ({
-      ...user,
-      role: (user as any).role || 'USER'
-    }))
+    const activeUsers = await prisma.user.count({
+      where: {
+        role: 'USER',
+        isActive: true,
+        isBlocked: false
+      }
+    })
 
-    return NextResponse.json({ success: true, users: usersWithRole })
+    const blockedUsers = await prisma.user.count({
+      where: {
+        role: 'USER',
+        isBlocked: true
+      }
+    })
+
+    const vipUsers = await prisma.user.count({
+      where: {
+        role: 'USER',
+        subscriptionPlan: { in: ['BASIC', 'PREMIUM'] }
+      }
+    })
+
+    return NextResponse.json({
+      success: true,
+      users,
+      pagination: {
+        page,
+        limit,
+        total: totalCount,
+        pages: Math.ceil(totalCount / limit)
+      },
+      stats: {
+        total: stats._count.id,
+        active: activeUsers,
+        blocked: blockedUsers,
+        vip: vipUsers
+      }
+    })
+
   } catch (error: any) {
-    console.error('❌ Erro ao listar usuários:', error)
+    console.error('Erro ao listar usuários:', error)
     return NextResponse.json(
-      { success: false, error: error.message || 'Erro ao listar usuários' },
-      { status: error.message?.includes('Acesso negado') ? 403 : 500 }
+      { error: error.message || 'Erro interno do servidor' },
+      { status: error.message === 'Acesso negado: autenticação de admin requerida' ? 401 : 500 }
     )
   }
 }
-

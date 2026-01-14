@@ -29,6 +29,7 @@ export async function GET(request: NextRequest) {
       image: user.image,
       emoji: user.emoji,
       telegramId: user.telegramId,
+      currency: (user as any).currency || 'BRL',
       role: (user as any).role || 'USER',
       lastLoginAt: user.lastLoginAt,
       createdAt: user.createdAt
@@ -52,7 +53,7 @@ export async function PUT(request: NextRequest) {
     const decoded = await verifyToken(token)
     const userId = decoded.userId
 
-    const { name, telegramId, emoji } = await request.json()
+    const { name, telegramId, emoji, currency } = await request.json()
 
     // Preparar dados para atualização
     const updateData: any = {}
@@ -72,6 +73,10 @@ export async function PUT(request: NextRequest) {
       updateData.emoji = emoji || '😊'
     }
 
+    if (currency !== undefined && ['BRL', 'USD', 'EUR'].includes(currency)) {
+      updateData.currency = currency
+    }
+
     // Se não há nada para atualizar
     if (Object.keys(updateData).length === 0) {
       return NextResponse.json({ message: 'Nenhum dado para atualizar' }, { status: 400 })
@@ -87,6 +92,7 @@ export async function PUT(request: NextRequest) {
         image: true,
         emoji: true,
         telegramId: true,
+        currency: true,
         role: true,
         lastLoginAt: true,
         createdAt: true

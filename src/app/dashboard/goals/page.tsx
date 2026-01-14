@@ -34,7 +34,7 @@ type Goal = {
 export default function GoalsPage() {
   const [goals, setGoals] = useState<Goal[]>([])
   const [loading, setLoading] = useState(true)
-  const { showValues } = useValuesVisibility()
+  const { showValues, currency } = useValuesVisibility()
 
   const [showAddForm, setShowAddForm] = useState(false)
   const [selectedFilter, setSelectedFilter] = useState('all')
@@ -264,7 +264,7 @@ export default function GoalsPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-zinc-300 font-medium text-sm">Total Economizado</p>
-                <p className="text-white text-2xl font-bold drop-shadow-lg mt-1">{formatCurrency(totalSaved, showValues)}</p>
+                <p className="text-white text-2xl font-bold drop-shadow-lg mt-1">{formatCurrency(totalSaved, showValues, currency)}</p>
               </div>
               <PiggyBank className="w-8 h-8 text-purple-400" />
             </div>
@@ -274,7 +274,7 @@ export default function GoalsPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-zinc-300 font-medium text-sm">Meta Total</p>
-                <p className="text-white text-2xl font-bold drop-shadow-lg mt-1">{formatCurrency(totalTarget, showValues)}</p>
+                <p className="text-white text-2xl font-bold drop-shadow-lg mt-1">{formatCurrency(totalTarget, showValues, currency)}</p>
               </div>
               <TrendingUp className="w-8 h-8 text-blue-400" />
             </div>
@@ -373,8 +373,8 @@ export default function GoalsPage() {
                 </div>
 
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-green-400">{formatCurrency(goal.currentAmount, showValues)}</span>
-                  <span className="text-zinc-300 font-medium">{formatCurrency(goal.targetAmount, showValues)}</span>
+                  <span className="text-green-400">{formatCurrency(goal.currentAmount, showValues, currency)}</span>
+                  <span className="text-zinc-300 font-medium">{formatCurrency(goal.targetAmount, showValues, currency)}</span>
                 </div>
               </div>
 
@@ -581,17 +581,17 @@ export default function GoalsPage() {
             <div className="mb-4 p-4 bg-white/5 rounded-xl">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-zinc-400 text-sm">Valor Atual</span>
-                <span className="text-white font-semibold">{formatCurrency(selectedGoal.currentAmount, showValues)}</span>
+                <span className="text-white font-semibold">{formatCurrency(selectedGoal.currentAmount, showValues, currency)}</span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-zinc-400 text-sm">Meta</span>
-                <span className="text-zinc-300">{formatCurrency(selectedGoal.targetAmount, showValues)}</span>
+                <span className="text-zinc-300">{formatCurrency(selectedGoal.targetAmount, showValues, currency)}</span>
               </div>
               <div className="mt-2 pt-2 border-t border-white/10">
                 <div className="flex items-center justify-between">
                   <span className="text-zinc-400 text-sm">Faltam</span>
                   <span className="text-green-400 font-semibold">
-                    {formatCurrency(selectedGoal.targetAmount - selectedGoal.currentAmount, showValues)}
+                    {formatCurrency(selectedGoal.targetAmount - selectedGoal.currentAmount, showValues, currency)}
                   </span>
                 </div>
               </div>
@@ -615,7 +615,7 @@ export default function GoalsPage() {
                   autoFocus
                 />
                 <p className="text-zinc-500 text-xs mt-1">
-                  Máximo: {formatCurrency(selectedGoal.targetAmount - selectedGoal.currentAmount, showValues)}
+                  Máximo: {formatCurrency(selectedGoal.targetAmount - selectedGoal.currentAmount, showValues, currency)}
                 </p>
               </div>
 

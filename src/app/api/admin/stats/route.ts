@@ -1,52 +1,140 @@
-/**
- * API para estatísticas gerais do sistema (apenas admin)
- */
-
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
+import { requireAdminAuth } from '@/middleware/admin'
 import { prisma } from '@/lib/prisma'
-import { getUserIdFromToken } from '@/lib/auth-utils'
-import { requireAdmin } from '@/lib/admin-utils'
 
-export async function GET(request: NextRequest) {
+export async function GET(request: Request) {
   try {
-    const userId = await getUserIdFromToken(request)
-    if (!userId) {
-      return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
-    }
+    await requireAdminAuth(request)
 
-    await requireAdmin(userId)
+    // Datas de referência
+    const now = new Date()
+    const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
+    const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
+    const yesterdayStart = new Date(now)
+    yesterdayStart.setDate(yesterdayStart.getDate() - 1)
+    yesterdayStart.setHours(0, 0, 0, 0)
 
+    const todayStart = new Date(now)
+    todayStart.setHours(0, 0, 0, 0)
+
+    // Estatísticas gerais de usuários
     const [
       totalUsers,
       activeUsers,
-      trialUsers,
+      blockedUsers,
+      usersToday,
+      usersThisWeek,
+      usersThisMonth,
+      freeUsers,
       basicUsers,
-      premiumUsers,
-      totalTransactions,
-      totalGoals,
-      totalInvestments,
-      recentUsers
+      premiumUsers
     ] = await Promise.all([
-      prisma.user.count(),
-      prisma.user.count({ where: { isActive: true } }),
-      prisma.user.count({ where: { subscriptionStatus: 'TRIAL' } }),
-      prisma.user.count({ where: { subscriptionPlan: 'BASIC' } }),
-      prisma.user.count({ where: { subscriptionPlan: 'PREMIUM' } }),
+      prisma.user.count({ where: { role: 'USER' } }),
+      prisma.user.count({ where: { role: 'USER', isActive: true, isBlocked: false } }),
+      prisma.user.count({ where: { role: 'USER', isBlocked: true } }),
+      prisma.user.count({ where: { role: 'USER', createdAt: { gte: todayStart } } }),
+      prisma.user.count({ where: { role: 'USER', createdAt: { gte: sevenDaysAgo } } }),
+      prisma.user.count({ where: { role: 'USER', createdAt: { gte: thirtyDaysAgo } } }),
+      prisma.user.count({ where: { role: 'USER', subscriptionPlan: 'FREE' } }),
+      prisma.user.count({ where: { role: 'USER', subscriptionPlan: 'BASIC' } }),
+      prisma.user.count({ where: { role: 'USER', subscriptionPlan: 'PREMIUM' } })
+    ])
+
+    // Estatísticas financeiras
+    const [
+      totalTransactions,
+      transactionsToday,
+      transactionsThisWeek,
+      transactionsThisMonth,
+      totalRevenue,
+      revenueThisMonth
+    ] = await Promise.all([
       prisma.transaction.count(),
-      prisma.goal.count(),
-      prisma.investment.count(),
-      prisma.user.findMany({
-        take: 5,
-        orderBy: { createdAt: 'desc' },
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          createdAt: true,
-          subscriptionPlan: true
-        }
+      prisma.transaction.count({ where: { createdAt: { gte: todayStart } } }),
+      prisma.transaction.count({ where: { createdAt: { gte: sevenDaysAgo } } }),
+      prisma.transaction.count({ where: { createdAt: { gte: thirtyDaysAgo } } }),
+      prisma.payment.aggregate({
+        where: { status: 'PAID' },
+        _sum: { amount: true }
+      }),
+      prisma.payment.aggregate({
+        where: { status: 'PAID', paidAt: { gte: thirtyDaysAgo } },
+        _sum: { amount: true }
       })
     ])
+
+    // Gráfico de registros por dia (últimos 30 dias)
+    const registrationsByDay = await prisma.user.groupBy({
+      by: ['createdAt'],
+      where: {
+        role: 'USER',
+        createdAt: { gte: thirtyDaysAgo }
+      },
+      _count: true
+    })
+
+    // Processar dados por dia
+    const chartData = []
+    for (let i = 29; i >= 0; i--) {
+      const date = new Date(now)
+      date.setDate(date.getDate() - i)
+      date.setHours(0, 0, 0, 0)
+
+      const nextDate = new Date(date)
+      nextDate.setDate(nextDate.getDate() + 1)
+
+      const count = registrationsByDay.filter(reg => {
+        const regDate = new Date(reg.createdAt)
+        return regDate >= date && regDate < nextDate
+      }).length
+
+      chartData.push({
+        date: date.toISOString().split('T')[0],
+        users: count
+      })
+    }
+
+    // Distribuição de planos
+    const planDistribution = [
+      { name: 'Free', value: freeUsers, color: '#6b7280' },
+      { name: 'Basic', value: basicUsers, color: '#3b82f6' },
+      { name: 'Premium', value: premiumUsers, color: '#10b981' }
+    ]
+
+    // Top categorias mais usadas
+    const topCategories = await prisma.category.findMany({
+      select: {
+        name: true,
+        _count: {
+          select: {
+            transactions: true
+          }
+        }
+      },
+      orderBy: {
+        transactions: {
+          _count: 'desc'
+        }
+      },
+      take: 5
+    })
+
+    // Últimas atividades (últimos logs admin)
+    const recentActivities = await prisma.adminLog.findMany({
+      select: {
+        id: true,
+        action: true,
+        description: true,
+        createdAt: true,
+        admin: {
+          select: {
+            name: true
+          }
+        }
+      },
+      orderBy: { createdAt: 'desc' },
+      take: 10
+    })
 
     return NextResponse.json({
       success: true,
@@ -54,26 +142,49 @@ export async function GET(request: NextRequest) {
         users: {
           total: totalUsers,
           active: activeUsers,
-          trial: trialUsers,
+          blocked: blockedUsers,
+          today: usersToday,
+          thisWeek: usersThisWeek,
+          thisMonth: usersThisMonth
+        },
+        plans: {
+          free: freeUsers,
           basic: basicUsers,
-          premium: premiumUsers
+          premium: premiumUsers,
+          distribution: planDistribution
         },
-        content: {
-          transactions: totalTransactions,
-          goals: totalGoals,
-          investments: totalInvestments
+        transactions: {
+          total: totalTransactions,
+          today: transactionsToday,
+          thisWeek: transactionsThisWeek,
+          thisMonth: transactionsThisMonth
         },
-        recentUsers
+        revenue: {
+          total: totalRevenue._sum.amount || 0,
+          thisMonth: revenueThisMonth._sum.amount || 0
+        },
+        charts: {
+          registrations: chartData
+        },
+        topCategories: topCategories.map(cat => ({
+          name: cat.name,
+          transactions: cat._count.transactions
+        })),
+        recentActivities: recentActivities.map(activity => ({
+          id: activity.id,
+          action: activity.action,
+          description: activity.description,
+          admin: activity.admin.name,
+          createdAt: activity.createdAt
+        }))
       }
     })
+
   } catch (error: any) {
-    console.error('❌ Erro ao buscar estatísticas:', error)
+    console.error('Erro ao buscar estatísticas admin:', error)
     return NextResponse.json(
-      { success: false, error: error.message || 'Erro ao buscar estatísticas' },
-      { status: error.message?.includes('Acesso negado') ? 403 : 500 }
+      { error: error.message || 'Erro interno do servidor' },
+      { status: error.message === 'Acesso negado: autenticação de admin requerida' ? 401 : 500 }
     )
   }
 }
-
-
-

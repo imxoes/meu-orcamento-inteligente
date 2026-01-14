@@ -44,7 +44,7 @@ export default function TransactionsPage() {
   const [transactions, setTransactions] = useState<Transaction[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
-  const { showValues } = useValuesVisibility()
+  const { showValues, currency } = useValuesVisibility()
 
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedFilter, setSelectedFilter] = useState('all')
@@ -372,7 +372,7 @@ export default function TransactionsPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-blue-400 text-sm font-bold drop-shadow-lg">Receitas</p>
-                <p className="text-white text-2xl font-bold drop-shadow-lg mt-1">{formatCurrency(totalIncome, showValues)}</p>
+                <p className="text-white text-2xl font-bold drop-shadow-lg mt-1">{formatCurrency(totalIncome, showValues, currency)}</p>
               </div>
               <TrendingUp className="w-8 h-8 text-blue-400" />
             </div>
@@ -382,7 +382,7 @@ export default function TransactionsPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-purple-400 text-sm font-bold drop-shadow-lg">Gastos</p>
-                <p className="text-white text-2xl font-bold drop-shadow-lg mt-1">{formatCurrency(totalExpenses, showValues)}</p>
+                <p className="text-white text-2xl font-bold drop-shadow-lg mt-1">{formatCurrency(totalExpenses, showValues, currency)}</p>
               </div>
               <TrendingDown className="w-8 h-8 text-purple-400" />
             </div>
@@ -393,7 +393,7 @@ export default function TransactionsPage() {
               <div>
                 <p className="text-blue-400 text-sm font-bold drop-shadow-lg">Saldo</p>
                 <p className={`text-2xl font-bold drop-shadow-lg mt-1 ${balance >= 0 ? 'text-white' : 'text-red-400'}`}>
-                  {formatCurrency(balance, showValues)}
+                  {formatCurrency(balance, showValues, currency)}
                 </p>
               </div>
               <DollarSign className="w-8 h-8 text-blue-400" />
@@ -527,7 +527,7 @@ export default function TransactionsPage() {
                       transaction.type === 'INCOME' ? 'text-green-400' : 'text-red-400'
                     }`}>
                       {showValues ? (
-                        `${transaction.type === 'INCOME' ? '+' : '-'}${formatCurrency(transaction.amount, showValues)}`
+                        `${transaction.type === 'INCOME' ? '+' : '-'}${formatCurrency(transaction.amount, showValues, currency)}`
                       ) : (
                         'R$ ••••••'
                       )}

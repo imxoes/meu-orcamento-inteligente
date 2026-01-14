@@ -45,7 +45,7 @@ export default function SettingsPage() {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [user, setUser] = useState<any>(null)
-  const [profileData, setProfileData] = useState({ name: '', telegramId: '', emoji: '😊' })
+  const [profileData, setProfileData] = useState({ name: '', telegramId: '', emoji: '😊', currency: 'BRL' })
   const [passwordData, setPasswordData] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' })
   const [showEmojiPicker, setShowEmojiPicker] = useState(false)
   
@@ -110,7 +110,8 @@ export default function SettingsPage() {
         setProfileData({
           name: data.user.name || '',
           telegramId: data.user.telegramId || '',
-          emoji: data.user.emoji || '😊'
+          emoji: data.user.emoji || '😊',
+          currency: data.user.currency || 'BRL'
         })
       } else {
         setError(data.message || 'Erro ao carregar dados do usuário')
@@ -329,7 +330,11 @@ export default function SettingsPage() {
 
         <div>
           <label className="block text-zinc-300 font-medium text-sm font-medium mb-2">Moeda Padrão</label>
-          <select className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:border-blue-500/50">
+          <select
+            value={profileData.currency}
+            onChange={(e) => setProfileData({ ...profileData, currency: e.target.value })}
+            className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:border-blue-500/50"
+          >
             <option value="BRL">Real (R$)</option>
             <option value="USD">Dólar (US$)</option>
             <option value="EUR">Euro (€)</option>

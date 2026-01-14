@@ -13,10 +13,24 @@ import {
   ArrowRight,
   BarChart3,
   Settings,
-  PieChart
+  PieChart as PieChartIcon
 } from 'lucide-react'
 import { useValuesVisibility, formatCurrency } from '@/contexts/ValuesVisibilityContext'
 import SimpleBackground from '@/components/ui/simple-background'
+import TrialBanner from '@/components/TrialBanner'
+import {
+  PieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer,
+  Legend,
+  Tooltip,
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid
+} from 'recharts'
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
@@ -40,7 +54,7 @@ export default function Dashboard() {
   const [goals, setGoals] = useState<any[]>([])
   const [investments, setInvestments] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
-  const { showValues } = useValuesVisibility()
+  const { showValues, currency } = useValuesVisibility()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -114,6 +128,11 @@ export default function Dashboard() {
         <SimpleBackground />
       </div>
       <div className="min-h-screen relative space-y-8 p-6">
+      {/* Trial Banner */}
+      {user && (
+        <TrialBanner user={user} />
+      )}
+
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -143,7 +162,7 @@ export default function Dashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-zinc-300 text-sm font-medium">Saldo Total</p>
-                <p className="text-white text-xl font-bold drop-shadow-lg">{formatCurrency(stats?.totalBalance || 0, showValues)}</p>
+                <p className="text-white text-xl font-bold drop-shadow-lg">{formatCurrency(stats?.totalBalance || 0, showValues, currency)}</p>
               </div>
               <Wallet className="w-5 h-5 text-blue-400" />
             </div>
@@ -153,7 +172,7 @@ export default function Dashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-zinc-300 text-sm font-medium">Receitas do Mês</p>
-                <p className="text-white text-xl font-semibold">{formatCurrency(stats?.monthlyIncome || 0, showValues)}</p>
+                <p className="text-white text-xl font-semibold">{formatCurrency(stats?.monthlyIncome || 0, showValues, currency)}</p>
               </div>
               <TrendingUp className="w-5 h-5 text-blue-400" />
             </div>
@@ -163,7 +182,7 @@ export default function Dashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-zinc-300 text-sm font-medium">Gastos do Mês</p>
-                <p className="text-white text-xl font-semibold">{formatCurrency(Math.abs(stats?.monthlyExpenses || 0), showValues)}</p>
+                <p className="text-white text-xl font-semibold">{formatCurrency(Math.abs(stats?.monthlyExpenses || 0), showValues, currency)}</p>
               </div>
               <TrendingDown className="w-5 h-5 text-purple-400" />
             </div>
@@ -173,7 +192,7 @@ export default function Dashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-zinc-300 text-sm font-medium">Economia do Mês</p>
-                <p className="text-white text-xl font-semibold">{formatCurrency(stats?.monthlySavings || 0, showValues)}</p>
+                <p className="text-white text-xl font-semibold">{formatCurrency(stats?.monthlySavings || 0, showValues, currency)}</p>
               </div>
               <DollarSign className="w-5 h-5 text-purple-400" />
             </div>
@@ -186,7 +205,8 @@ export default function Dashboard() {
                 <p className="text-white text-xl font-semibold">
                   {formatCurrency(
                     investments.reduce((sum, inv) => sum + (inv.currentAmount || 0), 0),
-                    showValues
+                    showValues,
+                    currency
                   )}
                 </p>
               </div>
@@ -233,8 +253,8 @@ export default function Dashboard() {
                 </Link>
               </div>
             ) : (
-              <div className="space-y-3 overflow-y-auto h-full pr-2 custom-scrollbar">
-                {transactions.slice(0, 10).map((transaction) => (
+              <div className="space-y-3">
+                {transactions.slice(0, 5).map((transaction) => (
                   <div key={transaction.id} className="flex items-center justify-between p-3 bg-black/10 backdrop-blur-sm rounded-lg border border-white/5">
                     <div className="flex items-center gap-3 min-w-0">
                       <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
@@ -255,7 +275,7 @@ export default function Dashboard() {
                       <p className={`font-semibold text-sm ${
                         transaction.type === 'INCOME' ? 'text-green-400' : 'text-red-400'
                       }`}>
-                        {transaction.type === 'INCOME' ? '+' : '-'}{formatCurrency(transaction.amount, showValues)}
+                        {transaction.type === 'INCOME' ? '+' : '-'}{formatCurrency(transaction.amount, showValues, currency)}
                       </p>
                       <p className="text-zinc-500 text-xs">
                         {new Date(transaction.createdAt).toLocaleDateString('pt-BR')}
@@ -331,25 +351,42 @@ export default function Dashboard() {
               const totalExpenses = topCategories.reduce((sum, [, amount]) => sum + amount, 0)
               
               return (
-                <div className="space-y-3">
+                <div className="space-y-3 overflow-y-auto h-full pr-2 custom-scrollbar">
                   {topCategories.map(([category, amount], index) => {
                     const percentage = totalExpenses > 0 ? (amount / totalExpenses) * 100 : 0
+                    const colors = [
+                      'bg-blue-500/20 text-blue-400',
+                      'bg-purple-500/20 text-purple-400',
+                      'bg-cyan-500/20 text-cyan-400',
+                      'bg-emerald-500/20 text-emerald-400',
+                      'bg-amber-500/20 text-amber-400'
+                    ]
                     return (
-                      <div key={category} className="space-y-1">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2 flex-1 min-w-0">
-                            <span className="text-zinc-400 text-sm font-medium w-6">{index + 1}.</span>
-                            <span className="text-white text-sm truncate">{category}</span>
+                      <div key={category} className="flex items-center justify-between p-3 bg-black/10 backdrop-blur-sm rounded-lg border border-white/5">
+                        <div className="flex items-center gap-3 min-w-0">
+                          <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${colors[index]}`}>
+                            <span className="font-bold text-sm">{index + 1}</span>
                           </div>
-                          <span className="text-purple-400 text-sm font-medium ml-2">
-                            {showValues ? formatCurrency(amount, true) : 'R$ •••'}
-                          </span>
+                          <div className="min-w-0">
+                            <p className="text-white font-medium text-sm truncate">{category}</p>
+                            <div className="flex items-center gap-2">
+                              <div className="w-20 bg-white/10 rounded-full h-1.5">
+                                <div
+                                  className="h-1.5 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 transition-all duration-300"
+                                  style={{ width: `${percentage}%` }}
+                                />
+                              </div>
+                              <span className="text-zinc-400 text-xs">{percentage.toFixed(0)}%</span>
+                            </div>
+                          </div>
                         </div>
-                        <div className="w-full bg-white/10 rounded-full h-1.5">
-                          <div
-                            className="h-1.5 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 transition-all duration-300"
-                            style={{ width: `${percentage}%` }}
-                          />
+                        <div className="text-right flex-shrink-0">
+                          <p className="text-purple-400 font-semibold text-sm">
+                            {formatCurrency(amount, showValues, currency)}
+                          </p>
+                          <p className="text-zinc-500 text-xs">
+                            do mês
+                          </p>
                         </div>
                       </div>
                     )
@@ -360,7 +397,7 @@ export default function Dashboard() {
           </div>
         </motion.div>
 
-        {/* Financial Goals */}
+        {/* Daily Expenses Chart - Last 7 Days */}
         <motion.div
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -369,13 +406,8 @@ export default function Dashboard() {
         >
           <div className="p-6 border-b border-white/10 flex-shrink-0">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold text-white drop-shadow-lg">Metas Financeiras</h2>
-              <Link
-                href="/dashboard/goals"
-                className="text-sm text-zinc-400 hover:text-blue-400 transition-colors"
-              >
-                Ver todas
-              </Link>
+              <h2 className="text-lg font-bold text-white drop-shadow-lg">Evolução de Gastos</h2>
+              <span className="text-sm text-zinc-400">Últimos 7 dias</span>
             </div>
           </div>
 
@@ -384,53 +416,165 @@ export default function Dashboard() {
               <div className="text-center py-8">
                 <p className="text-zinc-300">Carregando...</p>
               </div>
-            ) : goals.length === 0 ? (
-              <div className="text-center py-8">
-                <p className="text-zinc-300 font-medium">Nenhuma meta criada</p>
-                <Link
-                  href="/dashboard/goals"
-                  className="text-sm text-blue-400 hover:text-purple-400 transition-colors"
-                >
-                  Criar primeira meta
-                </Link>
-              </div>
-            ) : (
-              <div className="space-y-3 overflow-y-auto h-full pr-2 custom-scrollbar">
-                {goals.slice(0, 5).map((goal) => {
-                  const progress = goal.targetAmount > 0 ? (goal.currentAmount / goal.targetAmount) * 100 : 0
+            ) : (() => {
+              // Preparar dados dos últimos 7 dias
+              const now = new Date()
+              const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
+
+              // Criar array com os últimos 7 dias
+              const days = []
+              for (let i = 6; i >= 0; i--) {
+                const date = new Date(now.getTime() - i * 24 * 60 * 60 * 1000)
+                days.push({
+                  date: date,
+                  dateStr: date.toLocaleDateString('pt-BR', { weekday: 'short', day: 'numeric' }),
+                  dayName: date.toLocaleDateString('pt-BR', { weekday: 'short' }).replace('.', ''),
+                  expenses: 0,
+                  income: 0
+                })
+              }
+
+              // Calcular totais por dia
+              transactions.forEach(transaction => {
+                const transDate = new Date(transaction.createdAt)
+                const dayIndex = days.findIndex(day =>
+                  day.date.toDateString() === transDate.toDateString()
+                )
+
+                if (dayIndex !== -1) {
+                  if (transaction.type === 'EXPENSE') {
+                    days[dayIndex].expenses += transaction.amount
+                  } else {
+                    days[dayIndex].income += transaction.amount
+                  }
+                }
+              })
+
+              const chartData = days.map(day => ({
+                day: day.dayName,
+                gastos: parseFloat(day.expenses.toFixed(2)),
+                receitas: parseFloat(day.income.toFixed(2))
+              }))
+
+              const totalExpenses = days.reduce((sum, day) => sum + day.expenses, 0)
+              const totalIncome = days.reduce((sum, day) => sum + day.income, 0)
+              const maxValue = Math.max(...days.map(d => Math.max(d.expenses, d.income)))
+
+              if (totalExpenses === 0 && totalIncome === 0) {
+                return (
+                  <div className="text-center py-8">
+                    <p className="text-zinc-300 font-medium">Nenhuma movimentação nos últimos 7 dias</p>
+                    <Link
+                      href="/dashboard/transactions"
+                      className="text-sm text-blue-400 hover:text-purple-400 transition-colors"
+                    >
+                      Registrar primeira transação
+                    </Link>
+                  </div>
+                )
+              }
+
+              const CustomTooltip = ({ active, payload, label }: any) => {
+                if (active && payload && payload.length) {
                   return (
-                    <div key={goal.id} className="bg-black/10 backdrop-blur-sm rounded-lg p-4 border border-white/5">
-                      <div className="flex items-center justify-between mb-2">
-                        <h3 className="text-white font-medium text-sm">{goal.title}</h3>
-                        <span className="text-xs text-zinc-400">{progress.toFixed(0)}%</span>
-                      </div>
-                      <div className="w-full bg-white/10 rounded-full h-2 mb-2">
-                        <div
-                          className={`h-2 rounded-full transition-all duration-300 ${
-                            goal.status === 'COMPLETED'
-                              ? 'bg-gradient-to-r from-green-500 to-green-400'
-                              : 'bg-gradient-to-r from-blue-500 to-purple-500'
-                          }`}
-                          style={{ width: `${Math.min(progress, 100)}%` }}
-                        />
-                      </div>
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="text-green-400">{formatCurrency(goal.currentAmount, showValues)}</span>
-                        <span className="text-zinc-400">{formatCurrency(goal.targetAmount, showValues)}</span>
-                      </div>
+                    <div className="bg-black/90 backdrop-blur-sm p-3 rounded-lg border border-white/20">
+                      <p className="text-white font-medium text-sm mb-2">{label}</p>
+                      {payload.map((entry: any, index: number) => (
+                        <p key={index} className={`text-sm ${entry.name === 'gastos' ? 'text-red-400' : 'text-green-400'}`}>
+                          {entry.name === 'gastos' ? 'Gastos' : 'Receitas'}: {formatCurrency(entry.value, showValues, currency)}
+                        </p>
+                      ))}
                     </div>
                   )
-                })}
-                {goals.length > 5 && (
-                  <Link
-                    href="/dashboard/goals"
-                    className="block text-center text-sm text-blue-400 hover:text-purple-400 transition-colors pt-2"
-                  >
-                    Ver mais {goals.length - 5} meta{goals.length - 5 > 1 ? 's' : ''}
-                  </Link>
-                )}
-              </div>
-            )}
+                }
+                return null
+              }
+
+              const formatYAxis = (value: number) => {
+                if (!showValues) return ''
+                if (value >= 1000) {
+                  return `${(value / 1000).toFixed(1)}k`
+                }
+                return value.toFixed(0)
+              }
+
+              return (
+                <div className="h-full flex flex-col">
+                  <div className="flex-1" style={{ minHeight: '250px' }}>
+                    <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
+                      <LineChart
+                        data={chartData}
+                        margin={{ top: 20, right: 10, left: 10, bottom: 10 }}
+                      >
+                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 255, 255, 0.1)" />
+                        <XAxis
+                          dataKey="day"
+                          stroke="rgba(255, 255, 255, 0.5)"
+                          tick={{ fill: '#9ca3af', fontSize: 12 }}
+                          axisLine={{ stroke: 'rgba(255, 255, 255, 0.1)' }}
+                        />
+                        <YAxis
+                          stroke="rgba(255, 255, 255, 0.5)"
+                          tick={{ fill: '#9ca3af', fontSize: 12 }}
+                          axisLine={{ stroke: 'rgba(255, 255, 255, 0.1)' }}
+                          tickFormatter={formatYAxis}
+                        />
+                        <Tooltip content={<CustomTooltip />} />
+                        <Line
+                          type="monotone"
+                          dataKey="gastos"
+                          stroke="#ef4444"
+                          strokeWidth={2}
+                          dot={{ fill: '#ef4444', strokeWidth: 2, r: 4 }}
+                          activeDot={{ r: 6 }}
+                          name="gastos"
+                        />
+                        <Line
+                          type="monotone"
+                          dataKey="receitas"
+                          stroke="#10b981"
+                          strokeWidth={2}
+                          dot={{ fill: '#10b981', strokeWidth: 2, r: 4 }}
+                          activeDot={{ r: 6 }}
+                          name="receitas"
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+
+                  <div className="mt-4 space-y-2">
+                    <div className="flex items-center justify-between p-3 bg-black/10 backdrop-blur-sm rounded-lg border border-white/5">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                        <span className="text-zinc-300 text-sm">Total de Gastos</span>
+                      </div>
+                      <span className="text-red-400 font-semibold">
+                        {formatCurrency(totalExpenses, showValues, currency)}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center justify-between p-3 bg-black/10 backdrop-blur-sm rounded-lg border border-white/5">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                        <span className="text-zinc-300 text-sm">Total de Receitas</span>
+                      </div>
+                      <span className="text-green-400 font-semibold">
+                        {formatCurrency(totalIncome, showValues, currency)}
+                      </span>
+                    </div>
+
+                    <div className="pt-2 border-t border-white/10">
+                      <div className="flex items-center justify-between">
+                        <span className="text-zinc-300 text-sm font-medium">Saldo do Período</span>
+                        <span className={`font-bold text-lg ${totalIncome - totalExpenses >= 0 ? 'text-blue-400' : 'text-red-400'}`}>
+                          {formatCurrency(totalIncome - totalExpenses, showValues, currency)}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )
+            })()}
           </div>
         </motion.div>
       </div>

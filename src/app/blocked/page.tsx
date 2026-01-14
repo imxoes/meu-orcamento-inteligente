@@ -1,12 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { motion } from 'framer-motion'
 import { Shield, AlertCircle, Mail, MessageCircle } from 'lucide-react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 
-export default function BlockedPage() {
+function BlockedContent() {
   const [reason, setReason] = useState<string>('')
   const searchParams = useSearchParams()
 
@@ -145,5 +145,20 @@ export default function BlockedPage() {
         </motion.div>
       </div>
     </div>
+  )
+}
+
+export default function BlockedPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-8 h-8 border-2 border-white/20 border-t-white rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-zinc-400">Carregando...</p>
+        </div>
+      </div>
+    }>
+      <BlockedContent />
+    </Suspense>
   )
 }
